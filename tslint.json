@@ -15,6 +15,7 @@
         "member-access": [false, "no-public"],
         "member-ordering": false,
         "curly": true,
+        "eofline": false,
         "one-line": [
             true,
             "check-open-brace",

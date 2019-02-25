@@ -19,6 +19,7 @@
     "deploy:prod": "bash ./fb-deploy.sh prod"
   },
   "dependencies": {
+    "@types/fpsmeter": "^0.3.29",
     "@types/inversify": "^2.0.33",
     "babylonjs": "^3.3.0",
     "clean-webpack-plugin": "^1.0.1",

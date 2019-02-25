@@ -37,7 +37,7 @@
         "allowJs": true,
         "types": ["babylonjs", "reflect-metadata"],
 
-        "typeRoots": ["node_modules/@types", "typings"]
+        "typeRoots": ["node_modules/@types", "src/typings"]
 
     },
     "exclude" : [
