@@ -1,7 +1,7 @@
+import {di} from "./inversify.config";
 import Scene = BABYLON.Scene;
 import Engine = BABYLON.Engine;
 import Nullable = BABYLON.Nullable;
-import {di} from "./inversify.config";
 import {log_warn} from "./log";
 import {CoreTypes} from "./CoreTypes";
 

@@ -122,7 +122,7 @@ module.exports = (env, argv) => {
 
     config.plugins = config.plugins.concat([
         new HtmlWebpackPlugin({
-            title: "Fire Balls 3D",
+            title: "Blackjack 3D",
             debug_info: (() => {
                 if (process.env.DEPLOY_VERSION === "PROD") {
                     return "";
