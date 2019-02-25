@@ -1,0 +1,46 @@
+{
+    "presets": ["env"],
+
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "strictNullChecks": true,
+        "target": "es5",
+        "lib": ["es6", "dom"],
+        "jsx": "react",
+        "jsxFactory": "h",
+
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "noResolve": false,
+        "noUnusedParameters": false,
+
+        "importHelpers": true,
+
+
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+
+        "paths": {
+            "@core/*": ["src/core/*"],
+            "@game/*": ["src/game/*"],
+        },
+
+
+        "outDir": "dist/",
+        "sourceMap": true,
+        "allowJs": true,
+        "types": ["babylonjs", "reflect-metadata"],
+
+        "typeRoots": ["node_modules/@types", "typings"]
+
+    },
+    "exclude" : [
+        "./node_modules/**/*"
+    ]
+}

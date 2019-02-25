@@ -1,0 +1,41 @@
+{
+  "name": "blackjack-3d",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Alexander Slavschik",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf ./bin ./zip",
+    "start": "DEPLOY_VERSION=TEST WEBPACK_SERVER=YES webpack-dev-server --mode=development",
+    "start:test": "NODE_ENV=dev DEPLOY_VERSION=TEST WEBPACK_SERVER=YES webpack-dev-server --mode=development",
+    "start:dev": "NODE_ENV=dev DEPLOY_VERSION=DEV WEBPACK_SERVER=YES webpack-dev-server --mode=development",
+    "build:debug": "webpack --mode=development --env.build=$BUILD_NUMBER",
+    "build:release": "webpack --mode=production --env.build=$BUILD_NUMBER",
+    "build:test": "NODE_ENV=production DEPLOY_VERSION=TEST npm run build:debug",
+    "build:stage": "NODE_ENV=production DEPLOY_VERSION=STAGE npm run build:debug",
+    "build:prod": "NODE_ENV=production DEPLOY_VERSION=PROD npm run build:release",
+    "deploy:test": "bash ./fb-deploy.sh test",
+    "deploy:stage": "bash ./fb-deploy.sh stage",
+    "deploy:prod": "bash ./fb-deploy.sh prod"
+  },
+  "dependencies": {
+    "@types/inversify": "^2.0.33",
+    "babylonjs": "^3.3.0",
+    "clean-webpack-plugin": "^1.0.1",
+    "copy-webpack-plugin": "^5.0.0",
+    "eventemitter3": "^3.1.0",
+    "fpsmeter": "^0.3.1",
+    "html-webpack-plugin": "^3.2.0",
+    "inversify": "^5.0.1",
+    "pepjs-improved": "^0.4.2",
+    "reflect-metadata": "^0.1.13",
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.13.0",
+    "typescript": "^3.3.3333",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1",
+    "workbox-webpack-plugin": "^3.6.3"
+  }
+}
