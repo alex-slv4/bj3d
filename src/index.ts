@@ -4,6 +4,8 @@ import Engine = BABYLON.Engine;
 import Nullable = BABYLON.Nullable;
 import {log_warn} from "./log";
 import {CoreTypes} from "./CoreTypes";
+import {Main} from "@game/Main";
+import GameCamera from "@game/GameCamera";
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 canvas.setAttribute("touch-action", "none"); // for pepjs support
@@ -15,6 +17,7 @@ const engine = new Engine(canvas, true, {}, true);
 
 canvas.style.width = "100%";
 canvas.style.height = "100%";﻿﻿
+di.bind(Engine).toConstantValue(engine);
 
 const scene = new Scene(engine);
 di.bind("canvas").toConstantValue(canvas);
@@ -41,3 +44,8 @@ if (__DEV__) {
         });
     }
 }
+
+di.bind(Main).toSelf();
+di.bind(GameCamera).toSelf();
+
+di.get<Main>(Main).start();
