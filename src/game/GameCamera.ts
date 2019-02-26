@@ -7,6 +7,8 @@ import Scene = BABYLON.Scene;
 import Vector3 = BABYLON.Vector3;
 import {inject, injectable} from "inversify";
 import Engine = BABYLON.Engine;
+import Mesh = BABYLON.Mesh;
+import ArcRotateCamera = BABYLON.ArcRotateCamera;
 
 @injectable()
 export default class GameCamera {
@@ -17,20 +19,19 @@ export default class GameCamera {
     @inject(Engine)
     private engine: Engine;
 
-    public camera: FollowCamera | FreeCamera | ArcFollowCamera;
+    public camera: FollowCamera | FreeCamera | ArcFollowCamera | any;
 
     private _target: Nullable<AbstractMesh>;
 
     create() {
+        const canvas = this.engine.getRenderingCanvas() as HTMLCanvasElement;
 
-        this.camera = new FreeCamera("camera", Vector3.Zero(), this.scene);
-        // this.camera.radius = 25;
-        // this.camera.rotationOffset = 180;
-        // this.camera.heightOffset = 14;
-
-        // this.camera = new FreeCamera("FreeCamera", new Vector3(0, 45, -45), scene);
+        // this.camera = new FreeCamera("camera", new Vector3(0, 2, -2), this.scene);
         // this.camera.attachControl(canvas, true);
         // this.camera.rotation.x += 0.51;
+
+        this.camera = new ArcRotateCamera("camera", 0, Math.PI / 8, 3, Vector3.Zero(), this.scene);
+        this.camera.attachControl(canvas, true);
 
         (window as any).v_camera = this.camera;
     }
