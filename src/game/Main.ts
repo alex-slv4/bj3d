@@ -8,6 +8,7 @@ import StandardMaterial = BABYLON.StandardMaterial;
 import Color3 = BABYLON.Color3;
 import Texture = BABYLON.Texture;
 import MultiMaterial = BABYLON.MultiMaterial;
+import ShaderMaterial = BABYLON.ShaderMaterial;
 
 @injectable()
 export class Main {
@@ -26,25 +27,24 @@ export class Main {
         const light2 = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
         light2.intensity = 1;
 
-        const chip = MeshBuilder.CreateCylinder("chip", {diameter: 0.39, height: 0.025, tessellation: 32}, this.scene);
+        const chip = MeshBuilder.CreateCylinder("chip", {diameter: 0.39, height: 0.025, tessellation: 64}, this.scene);
 
         const chipMaterial = new MultiMaterial("chipMulti", this.scene);
 
         const chipMaterial1 = new StandardMaterial("chip", this.scene);
-        const texture = new Texture("./assets/texture-chip-bw.png", this.scene);
+        const texture = new Texture("./assets/texture-chip-wb.png", this.scene);
+        const bumpTexture = new Texture("./assets/chip-normalmap.png", this.scene);
         chipMaterial1.diffuseColor = Color3.Random();
-        chipMaterial1.diffuseTexture = texture;
-        chipMaterial1.diffuseTexture.hasAlpha = true;
+        chipMaterial1.specularColor = Color3.White();
+        chipMaterial1.specularTexture = texture;
+
+        chipMaterial1.emissiveColor = Color3.Black();
+        chipMaterial1.emissiveTexture = texture;
+
+        chipMaterial1.bumpTexture = bumpTexture;
 
         chipMaterial.subMaterials.push(chipMaterial1);
         chip.material = chipMaterial1;
-
-        // const plane = MeshBuilder.CreatePlane("chip", {size: 10}, this.scene);
-        // plane.rotate(Axis.X, Math.PI / 2, Space.LOCAL);
-        // plane.position.y = -1;
-        // const m = new StandardMaterial("plane-m", this.scene);
-        // m.diffuseColor = Color3.Blue();
-        // plane.material = m;
     }
 
     private createChip() {
