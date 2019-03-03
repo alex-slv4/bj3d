@@ -7,8 +7,7 @@ import Vector3 = BABYLON.Vector3;
 import StandardMaterial = BABYLON.StandardMaterial;
 import Color3 = BABYLON.Color3;
 import Texture = BABYLON.Texture;
-import MultiMaterial = BABYLON.MultiMaterial;
-import ShaderMaterial = BABYLON.ShaderMaterial;
+import Vector4 = BABYLON.Vector4;
 
 @injectable()
 export class Main {
@@ -27,26 +26,36 @@ export class Main {
         const light2 = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
         light2.intensity = 1;
 
-        const chip = MeshBuilder.CreateCylinder("chip", {diameter: 0.39, height: 0.025, tessellation: 64}, this.scene);
+        const sideTextureSize = 16;
+        const textureWidth = 512;
+        const textureHeight = 512 + sideTextureSize;
 
-        const chipMaterial = new MultiMaterial("chipMulti", this.scene);
+        const p = 1 - sideTextureSize / textureHeight;
+        const faceUV = [
+            new Vector4(0, 0, 1, p),
+            new Vector4(0, p, 6, 1),
+        ];
+        faceUV.push(faceUV[0]);
 
-        const chipMaterial1 = new StandardMaterial("chip", this.scene);
+        const chip = MeshBuilder.CreateCylinder("chip", {
+            diameter: 0.39,
+            height: 0.025,
+            tessellation: 64,
+            faceUV,
+        }, this.scene);
+
+        const material = new StandardMaterial("chip", this.scene);
         const texture = new Texture("./assets/texture-chip-wb.png", this.scene);
         const bumpTexture = new Texture("./assets/chip-normalmap.png", this.scene);
-        chipMaterial1.diffuseColor = Color3.Random();
-        chipMaterial1.specularColor = Color3.White();
-        chipMaterial1.specularTexture = texture;
 
-        chipMaterial1.emissiveColor = Color3.Black();
-        chipMaterial1.emissiveTexture = texture;
+        material.diffuseColor = Color3.Random();
+        material.specularColor = Color3.White();
+        material.specularTexture = texture;
+        material.emissiveColor = Color3.Black();
+        material.emissiveTexture = texture;
+        material.bumpTexture = bumpTexture;
 
-        chipMaterial1.bumpTexture = bumpTexture;
-
-        chipMaterial.subMaterials.push(chipMaterial1);
-        chip.material = chipMaterial1;
+        chip.material = material;
     }
 
-    private createChip() {
-    }
 }
