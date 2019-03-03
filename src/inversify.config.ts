@@ -1,6 +1,7 @@
 import {Container, decorate, injectable} from "inversify";
 import "reflect-metadata";
 import "babylonjs";
+import "babylonjs-inspector";
 import ChipsPool from "@game/ChipsPool";
 
 export const di = new Container();

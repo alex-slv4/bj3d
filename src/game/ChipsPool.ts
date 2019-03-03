@@ -13,31 +13,21 @@ export default class ChipsPool {
 
     @inject(Scene)
     private scene: Scene;
-    private cachedChips: { [key: string]: Mesh } = {};
-
-    private materialTemplate: StandardMaterial;
-    private meshTemplate: Mesh;
+    private cachedTemplates: { [key: string]: Mesh } = {};
 
     get(color: Color3): InstancedMesh {
 
         const id = ChipsPool.getIdFromColor(color);
-        if (!this.cachedChips[id]) {
-            if (!this.meshTemplate) {
-                this.meshTemplate = this.createMesh();
-            }
 
-            if (!this.materialTemplate) {
-                this.materialTemplate = this.createMaterialTemplate();
-            }
-            const mesh = this.meshTemplate.clone();
-            const material = this.materialTemplate.clone(ChipsPool.getIdFromColor(color, "_material"));
+        if (!this.cachedTemplates[id]) {
+            const mesh = this.createMesh();
+            const material = this.createMaterialTemplate();
             material.diffuseColor = color;
             mesh.material = material;
-            this.cachedChips[id] = mesh;
-
+            this.cachedTemplates[id] = mesh;
+            mesh.isVisible = false;
         }
-
-        return this.cachedChips[id].createInstance("chip-instance");
+        return this.cachedTemplates[id].createInstance("chip-instance-" + Math.random());
     }
 
     createMesh(): Mesh {
@@ -57,7 +47,7 @@ export default class ChipsPool {
             height: 0.025,
             tessellation: 64,
             faceUV,
-        }, this.scene);
+        }, null);
 
         return mesh;
     }
@@ -76,6 +66,7 @@ export default class ChipsPool {
 
         return material;
     }
+
     private static getIdFromColor(color: Color3, postfix: string = "_mesh") {
         return `${color.toHexString()}${postfix}`;
     }
