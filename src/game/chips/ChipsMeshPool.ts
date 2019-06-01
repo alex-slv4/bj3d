@@ -9,7 +9,7 @@ import Scene = BABYLON.Scene;
 import InstancedMesh = BABYLON.InstancedMesh;
 
 @injectable()
-export default class ChipsPool {
+export default class ChipsMeshPool {
 
     @inject(Scene)
     private scene: Scene;
@@ -17,7 +17,7 @@ export default class ChipsPool {
 
     get(color: Color3): InstancedMesh {
 
-        const id = ChipsPool.getIdFromColor(color);
+        const id = ChipsMeshPool.getIdFromColor(color);
 
         if (!this.cachedTemplates[id]) {
             const mesh = this.createMesh();

@@ -2,16 +2,18 @@ import {di} from "./inversify.config";
 import Scene = BABYLON.Scene;
 import Engine = BABYLON.Engine;
 import Nullable = BABYLON.Nullable;
-import {log_warn} from "./log";
+import {log_level_set, log_warn} from "./log";
 import {CoreTypes} from "./CoreTypes";
 import {Main} from "@game/Main";
 import GameCamera from "@game/GameCamera";
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 canvas.setAttribute("touch-action", "none"); // for pepjs support
-canvas.width = window.innerWidth; // * window.devicePixelRatio;
-canvas.height = window.innerHeight; // * window.devicePixelRatio;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 document.body.appendChild(canvas);
+
+log_level_set(Number.MAX_SAFE_INTEGER);
 
 const engine = new Engine(canvas, true, {}, true);
 
