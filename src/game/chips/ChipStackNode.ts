@@ -15,7 +15,8 @@ import Axis = BABYLON.Axis;
 import Space = BABYLON.Space;
 
 function getShiftX(): number {
-    return Math.round(Math.random() * ChipStackConstants.ditherXZ * 2) - ChipStackConstants.ditherXZ;
+    const randDither = Math.random() * ChipStackConstants.ditherXZ * 2;
+    return Math.round(randDither * 100) / 100;
 }
 
 @injectable()

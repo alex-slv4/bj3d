@@ -8,7 +8,6 @@ import {inject, injectable} from "inversify";
 import {StakeModel} from "@game/StakeModel";
 import ChipsMeshPool from "@game/chips/ChipsMeshPool";
 import Color3 = BABYLON.Color3;
-import {log_debug} from "../../log";
 
 export const enum ChipColor {
     BLUE,
