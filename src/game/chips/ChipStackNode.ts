@@ -11,9 +11,11 @@ import {ChipFactory} from "@game/chips/ChipFactory";
 import {fixfraction} from "@game/utils";
 import {di} from "../../inversify.config";
 import {View3D} from "@game/View3D";
+import Axis = BABYLON.Axis;
+import Space = BABYLON.Space;
 
 function getShiftX(): number {
-    return Math.round(Math.random() * ChipStackConstants.ditherX * 2) - ChipStackConstants.ditherX;
+    return Math.round(Math.random() * ChipStackConstants.ditherXZ * 2) - ChipStackConstants.ditherXZ;
 }
 
 @injectable()
@@ -83,8 +85,8 @@ export class ChipStackNode extends View3D {
 
     merge(stack: ChipStackNode): void {
         stack.chips.forEach((item: IChipView) => {
-            // keep dither of merging stack
-            this._next.x = item.view.position.x;
+            // keep ditherXZ of merging stack
+            this._next.x = item.mesh.position.x;
             this.push(item.amount);
         });
         // this.updateToolTip();
@@ -101,7 +103,11 @@ export class ChipStackNode extends View3D {
         const view: ChipStackNode = di.get(ChipStackNode);
         this.chips.forEach((item: IChipView, i: number) => {
             view.push(item.amount);
-            view.chips[i].view.position.copyFrom(item.view.position);
+            const chipMesh = view.chips[i].mesh;
+            chipMesh.position.copyFrom(item.mesh.position);
+            if (item.mesh.rotationQuaternion && chipMesh.rotationQuaternion) {
+                chipMesh.rotationQuaternion!.copyFrom(item.mesh.rotationQuaternion);
+            }
         });
         view.position.copyFrom(this.position);
         view.scaling = this.scaling.clone();
@@ -110,10 +116,11 @@ export class ChipStackNode extends View3D {
 
     push(amount: number): IChipView {
         const chip: IChipView = this.chipFactory.get(amount);
-        chip.view.position = new Vector3(this.next.x, this.next.y, 0);
+        chip.mesh.position = new Vector3(this.next.x, this.next.y, 0);
+        chip.mesh.rotate(Axis.Y, Math.random() * Math.PI, Space.LOCAL);
         this.putUp();
         this.chips.push(chip);
-        chip.view.parent = this.chipsCont;
+        chip.mesh.parent = this.chipsCont;
         return chip;
     }
 
@@ -133,8 +140,8 @@ export class ChipStackNode extends View3D {
     }
 
     private removeChip(chip: IChipView): void {
-        this._scene!.removeMesh(chip.view);
-        // this.chipsCont.removeChild(chip.view);
+        this._scene!.removeMesh(chip.mesh);
+        // this.chipsCont.removeChild(chip.mesh);
     }
 
     putUp(): void {

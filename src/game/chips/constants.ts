@@ -1,5 +1,5 @@
 export const ChipStackConstants = {
-    ditherX: 0.04,
+    ditherXZ: 0.04,
     recast: {
         DELAY: 0.075,
         FALL: 0.2,
