@@ -4,6 +4,8 @@
 import TransformNode = BABYLON.TransformNode;
 import Vector2 = BABYLON.Vector2;
 import Vector3 = BABYLON.Vector3;
+import Axis = BABYLON.Axis;
+import Space = BABYLON.Space;
 import {ChipStackConstants} from "@game/chips/constants";
 import {IChipView} from "@game/chips/IChipView";
 import {inject, injectable} from "inversify";
@@ -11,10 +13,8 @@ import {ChipFactory} from "@game/chips/ChipFactory";
 import {fixfraction} from "@game/utils";
 import {di} from "../../inversify.config";
 import {View3D} from "@game/View3D";
-import Axis = BABYLON.Axis;
-import Space = BABYLON.Space;
 
-function getShiftX(): number {
+function getShiftXZ(): number {
     const randDither = Math.random() * ChipStackConstants.ditherXZ * 2;
     return Math.round(randDither * 100) / 100;
 }
@@ -26,10 +26,10 @@ export class ChipStackNode extends View3D {
     // public toolTip: TooltipBet;
     public chipsCont: TransformNode = new TransformNode("chips-stack-node");
     // private moneyUtils: MoneyFormatterUtils = inject(MoneyFormatterUtils);
-    private positions: Vector2[] = [];
+    private positions: Vector3[] = [];
     protected chips: IChipView[] = [];
-    protected _next: Vector2 = Vector2.Zero();
-    protected _top: Vector2;
+    protected _next: Vector3 = Vector3.Zero();
+    protected _top: Vector3;
 
     @inject(ChipFactory)
     private chipFactory: ChipFactory;
@@ -52,7 +52,7 @@ export class ChipStackNode extends View3D {
             this.chipFactory.dispose(this.chips.pop()!);
         }
         delete this._top;
-        this._next = Vector2.Zero();
+        this._next = Vector3.Zero();
         this.positions = [];
 
         // if (updateToolTip) {
@@ -68,7 +68,7 @@ export class ChipStackNode extends View3D {
         return 0;
     }
 
-    get next(): Vector2 {
+    get next(): Vector3 {
         return this._next.clone();
     }
 
@@ -88,6 +88,7 @@ export class ChipStackNode extends View3D {
         stack.chips.forEach((item: IChipView) => {
             // keep ditherXZ of merging stack
             this._next.x = item.mesh.position.x;
+            this._next.z = item.mesh.position.z;
             this.push(item.amount);
         });
         // this.updateToolTip();
@@ -117,7 +118,7 @@ export class ChipStackNode extends View3D {
 
     push(amount: number): IChipView {
         const chip: IChipView = this.chipFactory.get(amount);
-        chip.mesh.position = new Vector3(this.next.x, this.next.y, 0);
+        chip.mesh.position = this.next;
         chip.mesh.rotate(Axis.Y, Math.random() * Math.PI, Space.LOCAL);
         this.putUp();
         this.chips.push(chip);
@@ -133,7 +134,7 @@ export class ChipStackNode extends View3D {
     }
 
     pop(): IChipView {
-        this._next = this.positions.pop() as Vector2;
+        this._next = this.positions.pop()!;
         this._top = this.positions[this.positions.length - 1];
         const chip: IChipView = this.chips.pop()!;
         this.removeChip(chip);
@@ -149,7 +150,8 @@ export class ChipStackNode extends View3D {
         this.positions.push(this._next);
         this._top = this._next;
         this._next = this._top.clone();
-        this._next.x = getShiftX();
+        this._next.x = getShiftXZ();
+        this._next.z = getShiftXZ();
         this._next.y -= ChipStackConstants.ITEM_HEIGHT;
     }
 
