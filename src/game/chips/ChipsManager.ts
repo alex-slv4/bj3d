@@ -8,6 +8,8 @@ import {ChipStackConstants} from "@game/chips/constants";
 import {DefaultChipStackSoundConfig, IChipStackSoundConfig} from "@game/sounds/constants";
 import {di} from "../../inversify.config";
 import Scene = BABYLON.Scene;
+import EasingFunction = BABYLON.EasingFunction;
+import PowerEase = BABYLON.PowerEase;
 
 @injectable()
 export abstract class ChipsManager {
@@ -100,13 +102,17 @@ export abstract class ChipsManager {
         stack.clear(false);
 
         const totalFrames = 60;
-        const framesPerItem = totalFrames / (values.length + 1);
+        const delay = ChipStackConstants.recast.DELAY / 60;
+        const framesPerItem = totalFrames / (values.length + 1) + delay;
+
+        const easingFunc = new PowerEase();
+        easingFunc.setEasingMode(BABYLON.PowerEase.EASINGMODE_EASEOUT);
 
         values.forEach(async (amount: number, i: number) => {
-            const itemShiftDown = ChipStackConstants.ITEM_HEIGHT * (values.length - i - 1);
-            const flyFromY: number = origStackTop + itemShiftDown;
+            const rIndex = values.length - i;
+            const itemShiftDown = ChipStackConstants.ITEM_HEIGHT * (rIndex - 1);
+            const flyFromY: number = origStackTop - itemShiftDown;
             const chip = stack.push(amount);
-            const delay = i * ChipStackConstants.recast.DELAY;
 
             const anim = new BABYLON.Animation(`shuffle-item-${i}`, "position.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
 
@@ -119,6 +125,8 @@ export abstract class ChipsManager {
                 value: stack.top,
             };
             anim.setKeys([firstFrame, lastFrame]);
+            anim.setEasingFunction(easingFunc);
+
             chip.mesh.animations = [anim];
 
             if (i !== values.length - 1) {
