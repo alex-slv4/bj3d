@@ -15,12 +15,12 @@ export abstract class View3D extends TransformNode {
         this.name = this.NAME;
     }
 
-    public abstract create(...params: any): this;
+    public abstract init(...params: any): this;
 
-    public async createAsync(...params: any): Promise<this> {
+    public async initAsync(...params: any): Promise<this> {
         return new Promise(resolve => {
             requestAnimationFrame(() => {
-                this.create.apply(this, params);
+                this.init.apply(this, params);
                 resolve(this);
             });
         });

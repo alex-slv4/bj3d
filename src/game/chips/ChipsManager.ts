@@ -152,6 +152,7 @@ export abstract class ChipsManager {
 
     newStack(total: number): ChipStackNode {
         const stackView: ChipStackNode = di.get(ChipStackNode);
+        stackView.init();
         const values: number[] = this.stakeModel.getValuesFromAmount(total);
         values.forEach(amount => stackView.push(amount));
         return stackView;

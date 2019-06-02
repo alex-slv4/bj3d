@@ -6,6 +6,7 @@ import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
 import {StakeModel} from "@game/StakeModel";
 import {ChipsManager} from "@game/chips/ChipsManager";
+import TransformNode = BABYLON.TransformNode;
 
 @injectable()
 export class Main {
@@ -40,10 +41,16 @@ export class Main {
         window.document.addEventListener("click", this.onStageClick.bind(this));
     }
     private onStageClick() {
-        this.chipStack.push(this.stakeModel.recastChips[0]);
-        if (this.chipStack.size > 10) {
-            this.chipsManager.recast(this.chipStack);
-        }
+
+        const stack2 = this.chipsManager.newStack(5.33);
+
+        this.chipStack.merge(stack2);
+        this.chipsManager.recast(this.chipStack);
+
+        // this.chipStack.push(this.stakeModel.recastChips[0]);
+        // if (this.chipStack.size > 10) {
+        //     this.chipsManager.recast(this.chipStack);
+        // }
     }
 
 }

@@ -34,7 +34,7 @@ export class ChipStackNode extends View3D {
     @inject(ChipFactory)
     private chipFactory: ChipFactory;
 
-    public create(...params: any): this {
+    public init(...params: any): this {
         this.chipsCont.parent = this;
         // if (this.hasToolTip) {
         //     this.toolTip = PoolManager.pop("TooltipBet", TooltipBet);
@@ -91,6 +91,7 @@ export class ChipStackNode extends View3D {
             this._next.z = item.mesh.position.z;
             this.push(item.amount);
         });
+        stack.dispose();
         // this.updateToolTip();
     }
 
