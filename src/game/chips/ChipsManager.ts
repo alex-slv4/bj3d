@@ -102,11 +102,10 @@ export abstract class ChipsManager {
         stack.clear(false);
 
         const totalFrames = 60;
-        const delay = ChipStackConstants.recast.DELAY / 60;
-        const framesPerItem = totalFrames / (values.length + 1) + delay;
+        const framesPerItem = totalFrames * (ChipStackConstants.recast.FALL / values.length);
 
         const easingFunc = new PowerEase();
-        easingFunc.setEasingMode(BABYLON.PowerEase.EASINGMODE_EASEOUT);
+        easingFunc.setEasingMode(BABYLON.PowerEase.EASINGMODE_EASEIN);
 
         values.forEach(async (amount: number, i: number) => {
             const rIndex = values.length - i;
@@ -121,7 +120,7 @@ export abstract class ChipsManager {
                 value: flyFromY,
             };
             const lastFrame = {
-                frame: firstFrame.frame + (values.length - i) * framesPerItem,
+                frame: firstFrame.frame + rIndex * framesPerItem,
                 value: stack.top,
             };
             anim.setKeys([firstFrame, lastFrame]);
@@ -129,16 +128,15 @@ export abstract class ChipsManager {
 
             chip.mesh.animations = [anim];
 
-            if (i !== values.length - 1) {
-                this.scene.beginAnimation(chip.mesh, 0, lastFrame.frame);
-            } else {
+            if (i === rIndex) {
                 // the last one animation, wait for its completion
                 await new Promise(resolve => {
                     this.scene.beginAnimation(chip.mesh, 0, lastFrame.frame, false, 1, () => resolve());
                 });
+            } else {
+                this.scene.beginAnimation(chip.mesh, 0, lastFrame.frame);
             }
         });
-        // const totalTime: number = ChipStackConstants.recast.DELAY * values.length + ChipStackConstants.recast.FALL;
         stack.updateToolTip();
     }
 

@@ -1,8 +1,7 @@
 export const ChipStackConstants = {
-    ditherXZ: 0.02,
+    ditherXZ: 0.01,
     recast: {
-        DELAY: 0.075,
-        FALL: 0.2,
+        FALL: 0.275,
     },
     ITEM_HEIGHT: 0.025,
     tooltipTextConfig: {

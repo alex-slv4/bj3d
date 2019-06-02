@@ -35,7 +35,7 @@ export class Main {
 
         (window as any).v_main = this;
 
-        this.chipStack = this.chipsManager.newStack(1);
+        this.chipStack = this.chipsManager.newStack(5.33);
 
         window.document.addEventListener("click", this.onStageClick.bind(this));
     }
