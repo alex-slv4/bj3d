@@ -2,7 +2,6 @@
  * @author alexander.slavschik
  */
 import TransformNode = BABYLON.TransformNode;
-import Vector2 = BABYLON.Vector2;
 import Vector3 = BABYLON.Vector3;
 import Axis = BABYLON.Axis;
 import Space = BABYLON.Space;
@@ -13,6 +12,7 @@ import {ChipFactory} from "@game/chips/ChipFactory";
 import {fixfraction} from "@game/utils";
 import {di} from "../../inversify.config";
 import {View3D} from "@game/View3D";
+import {DefaultChipStackSoundConfig, IChipStackSoundConfig} from "@game/sounds/constants";
 
 function getShiftXZ(): number {
     const randDither = Math.random() * ChipStackConstants.ditherXZ * 2;
@@ -22,7 +22,7 @@ function getShiftXZ(): number {
 @injectable()
 export class ChipStackNode extends View3D {
 
-    // public soundConfig: ChipStackSoundConfig = DefaultChipStackSoundConfig;
+    public soundConfig: IChipStackSoundConfig = DefaultChipStackSoundConfig;
     // public toolTip: TooltipBet;
     public chipsCont: TransformNode = new TransformNode("chips-stack-node");
     // private moneyUtils: MoneyFormatterUtils = inject(MoneyFormatterUtils);
@@ -94,12 +94,12 @@ export class ChipStackNode extends View3D {
         // this.updateToolTip();
     }
 
-    // updateToolTip(): void {
-    //     if (this.hasToolTip) {
-    //         this.toolTip.setText(this.moneyUtils.formatNumber(this.total, ChipStackConstants.tooltipTextConfig));
-    //         this.toolTip.show(this.total > 0);
-    //     }
-    // }
+    updateToolTip(): void {
+        // if (this.hasToolTip) {
+        //     this.toolTip.setText(this.moneyUtils.formatNumber(this.total, ChipStackConstants.tooltipTextConfig));
+        //     this.toolTip.show(this.total > 0);
+        // }
+    }
 
     cloneStack(): ChipStackNode {
         const view: ChipStackNode = di.get(ChipStackNode);
@@ -152,7 +152,7 @@ export class ChipStackNode extends View3D {
         this._next = this._top.clone();
         this._next.x = getShiftXZ();
         this._next.z = getShiftXZ();
-        this._next.y -= ChipStackConstants.ITEM_HEIGHT;
+        this._next.y += ChipStackConstants.ITEM_HEIGHT;
     }
 
     // getNextLocal(at: DisplayObject, stack?: ChipStackView): Point {

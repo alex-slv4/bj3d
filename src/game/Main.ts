@@ -1,14 +1,11 @@
 import {inject, injectable} from "inversify";
 import GameCamera from "@game/GameCamera";
-import {log_debug} from "../log";
-import {di} from "../inversify.config";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import Scene = BABYLON.Scene;
 import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
 import {StakeModel} from "@game/StakeModel";
-
-let a = 0;
+import {ChipsManager} from "@game/chips/ChipsManager";
 
 @injectable()
 export class Main {
@@ -18,6 +15,15 @@ export class Main {
 
     @inject(GameCamera)
     private camera: GameCamera;
+
+    @inject(ChipStackNode)
+    private chipStack: ChipStackNode;
+
+    @inject(ChipsManager)
+    private chipsManager: ChipsManager;
+
+    @inject(StakeModel)
+    private stakeModel: StakeModel;
 
     start() {
         this.camera.create();
@@ -29,12 +35,15 @@ export class Main {
 
         (window as any).v_main = this;
 
-        const stack = di.get(ChipStackNode);
-        const stake = di.get(StakeModel);
-        stake.recastChips.forEach(c => {
-            stack.push(c);
-        });
-        log_debug("onStageClick");
+        this.chipStack = this.chipsManager.newStack(1);
+
+        window.document.addEventListener("click", this.onStageClick.bind(this));
+    }
+    private onStageClick() {
+        this.chipStack.push(this.stakeModel.recastChips[0]);
+        if (this.chipStack.size > 10) {
+            this.chipsManager.recast(this.chipStack);
+        }
     }
 
 }
