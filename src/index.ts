@@ -33,18 +33,11 @@ window.addEventListener("resize", () => {
 });
 
 if (__DEV__) {
-    let fpsmeter: Nullable<FPSMeter> = null;
-    try {
-        fpsmeter = di.get(CoreTypes.debug.fpsMeter);
-    } catch (error) {
-        log_warn("Failed to add FPS meter");
-    }
-    if (fpsmeter) {
-        fpsmeter.show();
-        engine.onEndFrameObservable.add(() => {
-            (fpsmeter as FPSMeter).tick();
-        });
-    }
+    let fpsmeter: FPSMeter = di.get(CoreTypes.debug.fpsMeter);
+    fpsmeter.show();
+    engine.onEndFrameObservable.add(() => {
+        (fpsmeter as FPSMeter).tick();
+    });
 }
 
 di.bind(Main).toSelf();
