@@ -2,6 +2,10 @@ import {inject, injectable} from "inversify";
 import DynamicTexture = BABYLON.DynamicTexture;
 import Scene = BABYLON.Scene;
 
+
+const CARD_WIDTH: number = 100;
+const CARD_HEIGHT: number = 140;
+const Y_PADDING: number = 20; // transparent svg requires padding
 const mapR = ["C", "S", "D", "H"];
 const mapC = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
@@ -31,7 +35,8 @@ export class CardTextureCache {
                 console.timeEnd("generate_" + id);
             }
         }
-        this._cache.shirt = this.generateFrame(scale, 0, 4);
+        // this._cache.shirt = this.generateFrame(scale, 0, 4);
+        this._cache.card_billet = this.cutFrame(0, CARD_HEIGHT * 4, CARD_WIDTH * 2, CARD_HEIGHT + 20);
         console.timeEnd("generateALL");
     }
     public getRandomId(): string {
@@ -53,16 +58,15 @@ export class CardTextureCache {
         canvas.id = `frame-${x}-${y}`;
         canvas.width = outWidth;
         canvas.height = outHeight;
-        const texture = new DynamicTexture(`frame-${x}-${y}`, canvas, this.scene, true);
-        const ctx = texture.getContext();
+        const ctx = canvas.getContext("2d")!;
+
+        const texture = new DynamicTexture(canvas.id, canvas, this.scene, false);
         ctx.drawImage(this._atlasSource, x, y, width, height, 0, 0, outWidth, outHeight);
         texture.update();
+
         return texture;
     }
     private generateFrame(scale: number, i: number, j: number): DynamicTexture {
-        let frw = 100;
-        let frh = 140;
-        let jOffset = j * 40;
-        return this.cutFrame(i * frw, j * frw + jOffset, frw, frh, scale);
+        return this.cutFrame(i * CARD_WIDTH, j * CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, scale);
     }
 }
