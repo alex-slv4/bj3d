@@ -3,13 +3,14 @@ import GameCamera from "@game/GameCamera";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {StakeModel} from "@game/StakeModel";
 import {ChipsManager} from "@game/chips/ChipsManager";
+import {CardTextureCache} from "@game/CardTextureCache";
 import Scene = BABYLON.Scene;
 import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
-import MeshBuilder = BABYLON.MeshBuilder;
-import {CardTextureCache} from "@game/CardTextureCache";
 import StandardMaterial = BABYLON.StandardMaterial;
-import Color3 = BABYLON.Color3;
+import {Card3D} from "@game/cards/Card3D";
+import {di} from "../inversify.config";
+import {CoreTypes} from "../CoreTypes";
 
 @injectable()
 export class Main {
@@ -48,18 +49,20 @@ export class Main {
 
         (async () => {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
-            await this.cardsTextureCache.generate(2);
-            let dynamicTexture = this.cardsTextureCache.getRandom();
+            await this.cardsTextureCache.generate(5);
+            // let dynamicTexture = this.cardsTextureCache.getById("card_billet");
+            //
+            // const cube = MeshBuilder.CreateBox("box", {size: 0.5});
+            //
+            // const myMaterial = new StandardMaterial("Mat", this.scene);
+            // myMaterial.diffuseColor = Color3.White();
+            // myMaterial.diffuseTexture = dynamicTexture;
+            // myMaterial.opacityTexture = dynamicTexture;
+            //
+            // cube.material = myMaterial;
+            // this.scene.addMesh(cube);
 
-            const cube = MeshBuilder.CreateBox("box", {size: 0.5});
-
-            const myMaterial = new StandardMaterial("Mat", this.scene);
-            myMaterial.diffuseColor = Color3.White();
-            myMaterial.diffuseTexture = dynamicTexture;
-            myMaterial.opacityTexture = dynamicTexture;
-
-            cube.material = myMaterial;
-            this.scene.addMesh(cube);
+            this.createCard();
         })();
     }
     private onStageClick() {
@@ -75,4 +78,9 @@ export class Main {
         // }
     }
 
+    private createCard() {
+        let cardNode: Card3D = di.get(Card3D);
+
+        cardNode.init();
+    }
 }

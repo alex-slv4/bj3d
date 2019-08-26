@@ -5,7 +5,7 @@ import Scene = BABYLON.Scene;
 
 const CARD_WIDTH: number = 100;
 const CARD_HEIGHT: number = 140;
-const Y_PADDING: number = 20; // transparent svg requires padding
+const Y_PADDING: number = 0; // transparent svg requires padding
 const mapR = ["C", "S", "D", "H"];
 const mapC = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
@@ -27,8 +27,8 @@ export class CardTextureCache {
 
     async generate(scale: number) {
         console.time("generateALL");
-        for (let r = 0; r < 4; r++) {
-            for (let c = 0; c < 13; c++) {
+        for (let r = 0; r < mapR.length; r++) {
+            for (let c = 0; c < mapC.length; c++) {
                 let id = `${mapC[c]}${mapR[r]}`;
                 console.time("generate_" + id);
                 this._cache[id] = this.generateFrame(scale, c, r);
@@ -36,7 +36,7 @@ export class CardTextureCache {
             }
         }
         // this._cache.shirt = this.generateFrame(scale, 0, 4);
-        this._cache.card_billet = this.cutFrame(0, CARD_HEIGHT * 4, CARD_WIDTH * 2, CARD_HEIGHT + 20);
+        this._cache.card_billet = this.cutFrame(0, Y_PADDING * 4 + CARD_HEIGHT * 4, CARD_WIDTH * 2, CARD_HEIGHT + 20, scale);
         console.timeEnd("generateALL");
     }
     public getRandomId(): string {
@@ -67,6 +67,7 @@ export class CardTextureCache {
         return texture;
     }
     private generateFrame(scale: number, i: number, j: number): DynamicTexture {
-        return this.cutFrame(i * CARD_WIDTH, j * CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, scale);
+        const y_Offset = Y_PADDING * j;
+        return this.cutFrame(i * CARD_WIDTH, y_Offset + j * CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, scale);
     }
 }
