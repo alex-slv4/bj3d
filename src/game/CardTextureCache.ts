@@ -38,6 +38,8 @@ export class CardTextureCache {
         // this._cache.shirt = this.generateFrame(scale, 0, 4);
         this._cache.card_billet = this.cutFrame(0, Y_PADDING * 4 + CARD_HEIGHT * 4, CARD_WIDTH * 2, CARD_HEIGHT + 20, scale);
         console.timeEnd("generateALL");
+
+        delete this._atlasSource;
     }
     public getRandomId(): string {
         let c = Math.floor(Math.random() * mapC.length);

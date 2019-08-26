@@ -4,6 +4,8 @@ import {CardTextureCache} from "@game/CardTextureCache";
 import {View3D} from "@game/View3D";
 import MeshBuilder = BABYLON.MeshBuilder;
 import Axis = BABYLON.Axis;
+import Color3 = BABYLON.Color3;
+import Texture = BABYLON.Texture;
 
 @injectable()
 export class Card3D extends View3D {
@@ -17,12 +19,13 @@ export class Card3D extends View3D {
         billetMesh.parent = this;
         plane.parent = this;
         plane.rotate(Axis.X, Math.PI / 2);
-        plane.position.y = 0.1;
+        plane.position.y = 0.05;
 
         const faceMaterial = new StandardMaterial("card-face", this.scene);
         let faceTexture = this.cardsTextureCache.getRandom();
         faceMaterial.diffuseTexture = faceTexture;
         faceMaterial.opacityTexture = faceTexture;
+        faceMaterial.specularColor = Color3.FromHexString("#888888");
         plane.material = faceMaterial;
         return this
     }
@@ -48,8 +51,10 @@ export class Card3D extends View3D {
         let dynamicTexture = this.cardsTextureCache.getById("card_billet");
         const billetMaterial = new StandardMaterial("card_billet", this.scene);
         billetMaterial.diffuseTexture = dynamicTexture;
+        billetMaterial.specularColor = Color3.FromHexString("#333333");
 
         extrusion.material = billetMaterial;
+        extrusion.convertToFlatShadedMesh();
 
         return extrusion;
     }

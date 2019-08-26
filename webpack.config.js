@@ -105,6 +105,7 @@ const config = {
     devServer: {
         port: 3004,
         hot: true,
+        host: "0.0.0.0",
         contentBase: './dist',
         stats: 'errors-only',
         publicPath: '/',

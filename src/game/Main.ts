@@ -4,13 +4,12 @@ import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {StakeModel} from "@game/StakeModel";
 import {ChipsManager} from "@game/chips/ChipsManager";
 import {CardTextureCache} from "@game/CardTextureCache";
+import {Card3D} from "@game/cards/Card3D";
+import {di} from "../inversify.config";
 import Scene = BABYLON.Scene;
 import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
-import StandardMaterial = BABYLON.StandardMaterial;
-import {Card3D} from "@game/cards/Card3D";
-import {di} from "../inversify.config";
-import {CoreTypes} from "../CoreTypes";
+import Color3 = BABYLON.Color3;
 
 @injectable()
 export class Main {
@@ -37,9 +36,11 @@ export class Main {
         this.camera.create();
         const light = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, 20, -5), this.scene);
         light.intensity = 1;
+        light.specular = Color3.White();
 
         const light2 = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
         light2.intensity = 1;
+        light2.specular = Color3.White();
 
         (window as any).v_main = this;
 
@@ -49,7 +50,7 @@ export class Main {
 
         (async () => {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
-            await this.cardsTextureCache.generate(5);
+            await this.cardsTextureCache.generate(1);
             // let dynamicTexture = this.cardsTextureCache.getById("card_billet");
             //
             // const cube = MeshBuilder.CreateBox("box", {size: 0.5});
