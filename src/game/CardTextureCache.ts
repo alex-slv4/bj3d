@@ -49,12 +49,11 @@ export class CardTextureCache {
     private cutFrame(x: number, y: number, width: number, height: number, scale: number = 1): DynamicTexture {
         let outWidth = width * scale;
         let outHeight = height * scale;
-        const texture = new DynamicTexture(`frame-${x}-${y}`, {width: 512, height: 512}, this.scene, true);
-        // const canvas = document.createElement("canvas") as HTMLCanvasElement;
-        // canvas.id = `frame-${x}-${y}`;
-        // canvas.width = outWidth;
-        // canvas.height = outHeight;
-        // const ctx = canvas.getContext("2d")!;
+        const canvas = document.createElement("canvas") as HTMLCanvasElement;
+        canvas.id = `frame-${x}-${y}`;
+        canvas.width = outWidth;
+        canvas.height = outHeight;
+        const texture = new DynamicTexture(`frame-${x}-${y}`, canvas, this.scene, true);
         const ctx = texture.getContext();
         ctx.drawImage(this._atlasSource, x, y, width, height, 0, 0, outWidth, outHeight);
         texture.update();
