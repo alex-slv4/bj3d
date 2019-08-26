@@ -50,7 +50,7 @@ export class Main {
 
         (async () => {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
-            await this.cardsTextureCache.generate(1);
+            await this.cardsTextureCache.generate(5);
             // let dynamicTexture = this.cardsTextureCache.getById("card_billet");
             //
             // const cube = MeshBuilder.CreateBox("box", {size: 0.5});

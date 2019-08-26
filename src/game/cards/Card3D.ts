@@ -25,7 +25,7 @@ export class Card3D extends View3D {
         let faceTexture = this.cardsTextureCache.getRandom();
         faceMaterial.diffuseTexture = faceTexture;
         faceMaterial.opacityTexture = faceTexture;
-        faceMaterial.specularColor = Color3.FromHexString("#888888");
+        faceMaterial.specularColor = Color3.Black();
         plane.material = faceMaterial;
         return this
     }
@@ -51,7 +51,7 @@ export class Card3D extends View3D {
         let dynamicTexture = this.cardsTextureCache.getById("card_billet");
         const billetMaterial = new StandardMaterial("card_billet", this.scene);
         billetMaterial.diffuseTexture = dynamicTexture;
-        billetMaterial.specularColor = Color3.FromHexString("#333333");
+        billetMaterial.specularColor = Color3.Black();
 
         extrusion.material = billetMaterial;
         extrusion.convertToFlatShadedMesh();
