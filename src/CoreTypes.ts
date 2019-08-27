@@ -3,5 +3,6 @@ export const CoreTypes = {
         urlParams: Symbol("urlParams"),
         fpsMeter: Symbol("fpsMeter"),
     },
-    card: Symbol("Card3D")
+    card: Symbol("Card3D"),
+    gameFlowManager: Symbol("gameFlowManager")
 };

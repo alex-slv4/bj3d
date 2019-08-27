@@ -18,6 +18,8 @@ import {EventDispatcher} from "@core/events/EventDispatcher";
 import * as EventEmitter from "eventemitter3";
 import {SetupSceneAction} from "@game/actions/SetupSceneAction";
 import {GameFlowManagerBJ} from "./managers/GameFlowManagerBJ";
+import {UILayer} from "./ui/UILayer";
+import {SetupUIAction} from "@game/actions/SetupUIAction";
 
 export const di = new Container();
 
@@ -37,8 +39,10 @@ di.bind(CardTextureCache).toSelf().inSingletonScope();
 di.bind(EventDispatcher).toSelf().inSingletonScope();
 di.bind(SequenceAction).toSelf();
 
-di.bind(GameFlowManager).to(GameFlowManagerBJ).inSingletonScope();
+di.bind(CoreTypes.gameFlowManager).to(GameFlowManagerBJ).inSingletonScope();
 
+di.bind(UILayer).toSelf().inSingletonScope();
+di.bind(SetupUIAction).toSelf();
 di.bind(SetupSceneAction).toSelf();
 di.bind(GameStartAction).toSelf();
 

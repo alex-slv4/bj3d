@@ -1,7 +1,5 @@
 import {GameFlowManager} from "./GameFlowManager";
 import {Action} from "@core/actions/Action";
-import {di} from "../inversify.config";
-import {GameStartAction} from "@game/actions/GameStartAction";
 
 export class GameFlowManagerBJ extends GameFlowManager {
 
@@ -79,7 +77,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         // ]);
     }
     rebetAndDeal() {
-        this.log("rebet");
+        this.log("rebetAndDeal");
         // this.runFlow([
         //     di.get(HideUIAction),
         //     new HideWinningsAction(),
@@ -88,6 +86,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         // ]);
     }
     doubleAndDeal() {
+        this.log('doubleAndDeal');
         // this.runFlow([
         //     di.get(HideUIAction),
         //     new HideWinningsAction(),
@@ -108,6 +107,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
     }
 
     deal() {
+        this.log("Deal")
         // if (this.betUtil.canDeal(this.handsModel)) {
         //     this.runFlow([
         //         di.get(HideUIAction),

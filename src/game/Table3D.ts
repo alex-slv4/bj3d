@@ -26,6 +26,8 @@ export class Table3D extends View3D {
 
         const mesh = MeshBuilder.CreatePlane("game-table-plane", {width: 1500, height: 700});
         mesh.rotate(Axis.X, Math.PI / 2);
+        mesh.freezeWorldMatrix();
+
         const clothMaterial = new StandardMaterial("table-cloth", this.scene);
         clothMaterial.diffuseColor = Color3.FromHexString("#053204");
         mesh.material = clothMaterial;

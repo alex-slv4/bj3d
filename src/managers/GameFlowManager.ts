@@ -5,6 +5,7 @@ import {Action} from "@core/actions/Action";
 import {tagLog} from "@core/log";
 import {GameStartAction} from "@game/actions/GameStartAction";
 import {SetupSceneAction} from "@game/actions/SetupSceneAction";
+import {SetupUIAction} from "@game/actions/SetupUIAction";
 
 @injectable()
 export class GameFlowManager {
@@ -26,6 +27,7 @@ export class GameFlowManager {
     getStartFlow(): Action[] {
         return [
             di.get(SetupSceneAction),
+            di.get(SetupUIAction),
             di.get(GameStartAction),
             // di.get(ShowMainSceneAction),
             // di.get(ShowSoundPopupAction),

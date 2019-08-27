@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Action } from "Action";
+import {Action} from "@core/actions/Action";
 // import { TweenLite } from "gsap";
 
 @injectable()

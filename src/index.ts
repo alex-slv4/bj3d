@@ -43,4 +43,4 @@ if (__DEV__) {
 
 di.bind(GameCamera).toSelf();
 
-di.get<GameFlowManager>(GameFlowManager).startGame();
+di.get<GameFlowManager>(CoreTypes.gameFlowManager).startGame();
