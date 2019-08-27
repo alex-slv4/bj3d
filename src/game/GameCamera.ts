@@ -8,6 +8,7 @@ import Vector3 = BABYLON.Vector3;
 import Engine = BABYLON.Engine;
 import ArcRotateCamera = BABYLON.ArcRotateCamera;
 import {inject, injectable} from "inversify";
+import {Metrics} from "@game/Metrics";
 
 @injectable()
 export default class GameCamera {
@@ -29,7 +30,7 @@ export default class GameCamera {
         // this.camera.attachControl(canvas, true);
         // this.camera.rotation.x += 0.51;
 
-        this.camera = new ArcRotateCamera("camera", 0, Math.PI / 3, 50, Vector3.Zero(), this.scene);
+        this.camera = new ArcRotateCamera("camera", 0, Math.PI / 3, Metrics.CARD_HEIGHT * 3, Vector3.Zero(), this.scene);
         this.camera.attachControl(canvas, true);
 
         (window as any).v_camera = this.camera;

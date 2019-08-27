@@ -52,8 +52,8 @@ export class Main {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
             await this.cardsTextureCache.generate(5);
 
-            this.chipStack = this.chipsManager.newStack(3.5);
-            this.chipStack.position.z -= Metrics.CHIP_DIAMETER;
+            // this.chipStack = this.chipsManager.newStack(3.5);
+            // this.chipStack.position.z -= Metrics.CHIP_DIAMETER;
             // let dynamicTexture = this.cardsTextureCache.getById("card_billet");
             //
             // const cube = MeshBuilder.CreateBox("box", {size: 0.5});
@@ -84,7 +84,12 @@ export class Main {
 
     private createCard() {
         let cardNode: Card3D = di.get(Card3D);
+        let cardNode2: Card3D = di.get(Card3D);
 
         cardNode.init();
+        cardNode2.init();
+
+        cardNode2.position.x = Metrics.CARD_WIDTH/5;
+        cardNode2.position.y = Metrics.CARD_DEPTH;
     }
 }
