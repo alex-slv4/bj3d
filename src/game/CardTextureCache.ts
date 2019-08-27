@@ -61,7 +61,7 @@ export class CardTextureCache {
         canvas.width = outWidth;
         canvas.height = outHeight;
         const ctx = canvas.getContext("2d")!;
-
+        // add mipmaps, fix safari squared texture
         const texture = new DynamicTexture(canvas.id, canvas, this.scene, false);
         ctx.drawImage(this._atlasSource, x, y, width, height, 0, 0, outWidth, outHeight);
         texture.update();
