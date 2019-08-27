@@ -7,6 +7,7 @@ import Vector4 = BABYLON.Vector4;
 import Mesh = BABYLON.Mesh;
 import Scene = BABYLON.Scene;
 import InstancedMesh = BABYLON.InstancedMesh;
+import {Metrics} from "@game/Metrics";
 
 @injectable()
 export default class ChipsMeshPool {
@@ -43,8 +44,8 @@ export default class ChipsMeshPool {
         faceUV.push(faceUV[0]);
 
         const mesh = MeshBuilder.CreateCylinder("chip", {
-            diameter: 0.39,
-            height: 0.025,
+            diameter: Metrics.CHIP_DIAMETER,
+            height: Metrics.CHIP_DEPTH,
             tessellation: 64,
             faceUV,
         }, null);

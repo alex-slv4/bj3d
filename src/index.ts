@@ -6,6 +6,7 @@ import {log_level_set, log_warn} from "./log";
 import {CoreTypes} from "./CoreTypes";
 import {Main} from "@game/Main";
 import GameCamera from "@game/GameCamera";
+import Color4 = BABYLON.Color4;
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 canvas.setAttribute("touch-action", "none"); // for pepjs support
@@ -18,10 +19,11 @@ log_level_set(Number.MAX_SAFE_INTEGER);
 const engine = new Engine(canvas, true, {}, true);
 
 canvas.style.width = "100%";
-canvas.style.height = "100%";﻿﻿
+canvas.style.height = "100%";
 di.bind(Engine).toConstantValue(engine);
 
 const scene = new Scene(engine);
+scene.clearColor = new Color4(0, 0, 0, 1);
 di.bind("canvas").toConstantValue(canvas);
 di.bind(Scene).toConstantValue(scene);
 

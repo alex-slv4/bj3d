@@ -10,6 +10,7 @@ import Scene = BABYLON.Scene;
 import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
 import Color3 = BABYLON.Color3;
+import {Metrics} from "@game/Metrics";
 
 @injectable()
 export class Main {
@@ -44,13 +45,15 @@ export class Main {
 
         (window as any).v_main = this;
 
-        // this.chipStack = this.chipsManager.newStack(5.33);
 
         // window.document.addEventListener("click", this.onStageClick.bind(this));
 
         (async () => {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
             await this.cardsTextureCache.generate(5);
+
+            this.chipStack = this.chipsManager.newStack(3.5);
+            this.chipStack.position.z -= Metrics.CHIP_DIAMETER;
             // let dynamicTexture = this.cardsTextureCache.getById("card_billet");
             //
             // const cube = MeshBuilder.CreateBox("box", {size: 0.5});

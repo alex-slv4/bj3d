@@ -13,11 +13,14 @@ import {fixfraction} from "@game/utils";
 import {di} from "../../inversify.config";
 import {View3D} from "@game/View3D";
 import {DefaultChipStackSoundConfig, IChipStackSoundConfig} from "@game/sounds/constants";
+import {Metrics} from "@game/Metrics";
 
 function getShiftXZ(): number {
     const randDither = Math.random() * ChipStackConstants.ditherXZ * 2;
     return Math.round(randDither * 100) / 100;
 }
+
+const BottomPoint: Vector3 = new Vector3(0, Metrics.CHIP_DEPTH/2, 0);
 
 @injectable()
 export class ChipStackNode extends View3D {
@@ -28,7 +31,7 @@ export class ChipStackNode extends View3D {
     // private moneyUtils: MoneyFormatterUtils = inject(MoneyFormatterUtils);
     private positions: Vector3[] = [];
     protected chips: IChipView[] = [];
-    protected _next: Vector3 = Vector3.Zero();
+    protected _next: Vector3 = BottomPoint.clone();
     protected _top: Vector3;
 
     @inject(ChipFactory)
@@ -52,7 +55,7 @@ export class ChipStackNode extends View3D {
             this.chipFactory.dispose(this.chips.pop()!);
         }
         delete this._top;
-        this._next = Vector3.Zero();
+        this._next = BottomPoint.clone();
         this.positions = [];
 
         // if (updateToolTip) {
@@ -153,7 +156,7 @@ export class ChipStackNode extends View3D {
         this._next = this._top.clone();
         this._next.x = getShiftXZ();
         this._next.z = getShiftXZ();
-        this._next.y += ChipStackConstants.ITEM_HEIGHT;
+        this._next.y += Metrics.CHIP_DEPTH;
     }
 
     // getNextLocal(at: DisplayObject, stack?: ChipStackView): Point {
