@@ -1,186 +1,184 @@
-import {inject} from "inversify";
 import {GameFlowManager} from "./GameFlowManager";
+import {Action} from "@core/actions/Action";
+import {di} from "../inversify.config";
+import {GameStartAction} from "@game/actions/GameStartAction";
 
 export class GameFlowManagerBJ extends GameFlowManager {
 
-    @inject(BetUtil)
-    private betUtil: BetUtilBJ;
-
-    @inject(HandsModel)
-    private handsModel: HandsModel;
+    // @inject(BetUtil)
+    // private betUtil: BetUtilBJ;
+    //
+    // @inject(HandsModel)
+    // private handsModel: HandsModel;
 
     getStartFlow(): Action[] {
-        // return super.getStartFlow().concat([
-        //     new PlaceYourBetsAction()
-        //     ]);
-        return [
-            inject(GameStartAction),
-            inject(ShowMainSceneActionBJ),
-            inject(LockUIAction),
-            inject(ShowSoundPopupAction),
-            inject(WelcomeAction),
-            inject(RestoreGameActionBJ),
-            inject(ShowSelectBetPopupAction),
-            inject(StartFocusAction),
-            inject(InitWrapperAction),
-            new PlaceYourBetsAction()
-        ];
+        return super.getStartFlow().concat([
+            // di.get(ShowMainSceneActionBJ),
+            // di.get(LockUIAction),
+            // di.get(ShowSoundPopupAction),
+            // di.get(WelcomeAction),
+            // di.get(RestoreGameActionBJ),
+            // di.get(ShowSelectBetPopupAction),
+            // di.get(StartFocusAction),
+            // di.get(InitWrapperAction),
+            // new PlaceYourBetsAction()
+        ]);
     }
 
     anywhereClick() {
         this.log("anywhere click");
-        this.runFlow([
-            inject(LockUIAction).setParams(true),
-            new HideWinningsAction(),
-            inject(ShowLastLimitsAction),
-            new PlaceYourBetsAction(),
-            inject(LockUIAction).setParams(false)
-        ]);
+        // this.runFlow([
+        //     di.get(LockUIAction).setParams(true),
+        //     new HideWinningsAction(),
+        //     di.get(ShowLastLimitsAction),
+        //     new PlaceYourBetsAction(),
+        //     di.get(LockUIAction).setParams(false)
+        // ]);
     }
     bet(handId: string, bet: number, instantly: boolean = false) {
         this.log(`place ${bet}$ at hand ${handId}`);
-        this.runFlow([
-            inject(LockUIAction).setParams(true),
-            new HideWinningsAction(),
-            inject(PlaceBetAction).setParams(handId, bet, true, instantly),
-            inject(LockUIAction).setParams(false),
-            inject(UpdateUIAction)
-        ]);
+        // this.runFlow([
+        //     di.get(LockUIAction).setParams(true),
+        //     new HideWinningsAction(),
+        //     di.get(PlaceBetAction).setParams(handId, bet, true, instantly),
+        //     di.get(LockUIAction).setParams(false),
+        //     di.get(UpdateUIAction)
+        // ]);
     }
 
     doubleBet(instantly: boolean = false) {
         this.log(`double bet`);
-
-        this.runFlow([
-            inject(LockUIAction).setParams(true),
-            inject(DoubleBetAction).setParams(true),
-
-            inject(LockUIAction).setParams(false),
-            inject(UpdateUIAction)
-        ]);
+        //
+        // this.runFlow([
+        //     di.get(LockUIAction).setParams(true),
+        //     di.get(DoubleBetAction).setParams(true),
+        //
+        //     di.get(LockUIAction).setParams(false),
+        //     di.get(UpdateUIAction)
+        // ]);
     }
 
     undo() {
         this.log("undo");
-        this.runFlow([
-            inject(LockUIAction).setParams(true),
-            inject(UndoActionBJ),
-            inject(LockUIAction).setParams(false),
-            inject(ShowLastLimitsAction),
-            inject(UpdateUIAction)
-        ]);
+        // this.runFlow([
+        //     di.get(LockUIAction).setParams(true),
+        //     di.get(UndoActionBJ),
+        //     di.get(LockUIAction).setParams(false),
+        //     di.get(ShowLastLimitsAction),
+        //     di.get(UpdateUIAction)
+        // ]);
     }
 
     rebet() {
         this.log("rebet");
-        this.runFlow([
-            inject(HideUIAction).setParams(false),
-            new HideWinningsAction(),
-            inject(RebetAction),
-            inject(UpdateUIAction)
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction).setParams(false),
+        //     new HideWinningsAction(),
+        //     di.get(RebetAction),
+        //     di.get(UpdateUIAction)
+        // ]);
     }
     rebetAndDeal() {
         this.log("rebet");
-        this.runFlow([
-            inject(HideUIAction),
-            new HideWinningsAction(),
-            inject(RebetAction),
-            new LazyAction(() => this.deal())
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     new HideWinningsAction(),
+        //     di.get(RebetAction),
+        //     new LazyAction(() => this.deal())
+        // ]);
     }
     doubleAndDeal() {
-        this.runFlow([
-            inject(HideUIAction),
-            new HideWinningsAction(),
-            new RebetDoubleAction(),
-            new LazyAction(() => this.deal())
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     new HideWinningsAction(),
+        //     new RebetDoubleAction(),
+        //     new LazyAction(() => this.deal())
+        // ]);
     }
 
     clear() {
         this.log('clear');
-        this.runFlow([
-            // inject(HideUIAction),
-            inject(ClearAction),
-            inject(ShowLastLimitsAction),
-            inject(UpdateUIAction),
-            //new PlaceYourBetsAction()
-        ]);
+        // this.runFlow([
+        //     // di.get(HideUIAction),
+        //     di.get(ClearAction),
+        //     di.get(ShowLastLimitsAction),
+        //     di.get(UpdateUIAction),
+        //     //new PlaceYourBetsAction()
+        // ]);
     }
 
     deal() {
-        if (this.betUtil.canDeal(this.handsModel)) {
-            this.runFlow([
-                inject(HideUIAction),
-                // new FocusHandAction(null).setParams(true),
-                inject(DealAction),
-                inject(DealAnimationAction),
-                inject(CardsDealtAction),
-                inject(ResultsAction)
-            ]);
-        } else {
-            this.runFlow([
-                inject(UpdateUIAction)
-            ]);
-        }
+        // if (this.betUtil.canDeal(this.handsModel)) {
+        //     this.runFlow([
+        //         di.get(HideUIAction),
+        //         // new FocusHandAction(null).setParams(true),
+        //         di.get(DealAction),
+        //         di.get(DealAnimationAction),
+        //         di.get(CardsDealtAction),
+        //         di.get(ResultsAction)
+        //     ]);
+        // } else {
+        //     this.runFlow([
+        //         di.get(UpdateUIAction)
+        //     ]);
+        // }
     }
 
     hit() {
         this.log("hit");
-        this.terminateCurrentFlow();
-        this.runFlow([
-            inject(HideUIAction),
-            new FocusHandAction(null).setParams(true),
-            inject(HitAction),
-            inject(DealNewCardAnimation),
-            inject(ResultsAction)
-        ]);
+        // this.terminateCurrentFlow();
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     new FocusHandAction(null).setParams(true),
+        //     di.get(HitAction),
+        //     di.get(DealNewCardAnimation),
+        //     di.get(ResultsAction)
+        // ]);
     }
 
     stand() {
         this.log("stand");
         this.terminateCurrentFlow();
-        this.runFlow([
-            inject(HideUIAction),
-            inject(StandAction),
-            inject(ResultsAction)
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     di.get(StandAction),
+        //     di.get(ResultsAction)
+        // ]);
     }
 
     double() {
         this.log("double");
         this.terminateCurrentFlow();
-        this.runFlow([
-            inject(HideUIAction),
-            new FocusHandAction(null),
-            inject(DoubleAction),
-            inject(DealNewCardAnimation),
-            inject(ResultsAction)
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     new FocusHandAction(null),
+        //     di.get(DoubleAction),
+        //     di.get(DealNewCardAnimation),
+        //     di.get(ResultsAction)
+        // ]);
     }
 
     split() {
         this.log("split");
-        this.terminateCurrentFlow();
-        this.runFlow([
-            inject(HideUIAction),
-            new DisableHandAction(this.handsModel.activeHand),
-            new FocusHandAction(null),
-            inject(SplitAction),
-            new SplitAnimationAction(this.handsModel.activeHand.id),
-            inject(DealSplitCardsAnimation),
-            inject(GameEndAction)
-        ]);
+        // this.terminateCurrentFlow();
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     new DisableHandAction(this.handsModel.activeHand),
+        //     new FocusHandAction(null),
+        //     di.get(SplitAction),
+        //     new SplitAnimationAction(this.handsModel.activeHand.id),
+        //     di.get(DealSplitCardsAnimation),
+        //     di.get(GameEndAction)
+        // ]);
     }
 
     insurance(agree: boolean, toAll: boolean) {
         this.log("insurance");
-        this.runFlow([
-            inject(HideUIAction),
-            inject(InsureDecideAction).setParams(agree, toAll),
-            inject(GameEndAction),
-            inject(UpdateUIAction)
-        ]);
+        // this.runFlow([
+        //     di.get(HideUIAction),
+        //     di.get(InsureDecideAction).setParams(agree, toAll),
+        //     di.get(GameEndAction),
+        //     di.get(UpdateUIAction)
+        // ]);
     }
 }
