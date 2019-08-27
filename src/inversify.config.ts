@@ -10,6 +10,7 @@ import {ChipsManager} from "@game/chips/ChipsManager";
 import {CardTextureCache} from "@game/CardTextureCache";
 import {Card3D} from "@game/cards/Card3D";
 import {CoreTypes} from "./CoreTypes";
+import {Table3D} from "@game/Table3D";
 
 export const di = new Container();
 
@@ -19,6 +20,7 @@ di.bind(ChipsMeshPool).toSelf();
 di.bind(ChipFactory).toSelf();
 di.bind(ChipStackNode).toSelf();
 di.bind(Card3D).toSelf();
+di.bind(Table3D).toSelf().inSingletonScope();
 
 di.bind(ChipsManager).toSelf().inSingletonScope();
 di.bind(StakeModel).toSelf().inSingletonScope();

@@ -2,7 +2,7 @@ import {di} from "./inversify.config";
 import Scene = BABYLON.Scene;
 import Engine = BABYLON.Engine;
 import Nullable = BABYLON.Nullable;
-import {log_level_set, log_warn} from "./log";
+import {log_level_set, log_warn} from "./core/log";
 import {CoreTypes} from "./CoreTypes";
 import {Main} from "@game/Main";
 import GameCamera from "@game/GameCamera";

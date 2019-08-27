@@ -11,6 +11,7 @@ import HemisphericLight = BABYLON.HemisphericLight;
 import Vector3 = BABYLON.Vector3;
 import Color3 = BABYLON.Color3;
 import {Metrics} from "@game/Metrics";
+import {Table3D} from "@game/Table3D";
 
 @injectable()
 export class Main {
@@ -30,6 +31,9 @@ export class Main {
     @inject(StakeModel)
     private stakeModel: StakeModel;
 
+    @inject(Table3D)
+    private table: Table3D;
+
     @inject(CardTextureCache)
     private cardsTextureCache: CardTextureCache;
 
@@ -45,12 +49,13 @@ export class Main {
 
         (window as any).v_main = this;
 
-
         // window.document.addEventListener("click", this.onStageClick.bind(this));
 
         (async () => {
             await this.cardsTextureCache.preload("assets/cards-all.svg");
             await this.cardsTextureCache.generate(5);
+
+            this.table.init();
 
             // this.chipStack = this.chipsManager.newStack(3.5);
             // this.chipStack.position.z -= Metrics.CHIP_DIAMETER;
@@ -66,7 +71,6 @@ export class Main {
             // cube.material = myMaterial;
             // this.scene.addMesh(cube);
 
-            this.createCard();
         })();
     }
     private onStageClick() {
@@ -80,16 +84,5 @@ export class Main {
         // if (this.chipStack.size > 10) {
         //     this.chipsManager.recast(this.chipStack);
         // }
-    }
-
-    private createCard() {
-        let cardNode: Card3D = di.get(Card3D);
-        let cardNode2: Card3D = di.get(Card3D);
-
-        cardNode.init();
-        cardNode2.init();
-
-        cardNode2.position.x = Metrics.CARD_WIDTH/5;
-        cardNode2.position.y = Metrics.CARD_DEPTH;
     }
 }
