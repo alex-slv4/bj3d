@@ -1,11 +1,10 @@
 import {di} from "./inversify.config";
+import {log_level_set} from "./core/log";
+import {CoreTypes} from "./CoreTypes";
+import GameCamera from "@game/GameCamera";
+import {GameFlowManager} from "./managers/GameFlowManager";
 import Scene = BABYLON.Scene;
 import Engine = BABYLON.Engine;
-import Nullable = BABYLON.Nullable;
-import {log_level_set, log_warn} from "./core/log";
-import {CoreTypes} from "./CoreTypes";
-import {Main} from "@game/Main";
-import GameCamera from "@game/GameCamera";
 import Color4 = BABYLON.Color4;
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
@@ -42,7 +41,6 @@ if (__DEV__) {
     });
 }
 
-di.bind(Main).toSelf();
 di.bind(GameCamera).toSelf();
 
-di.get<Main>(Main).start();
+di.get<GameFlowManager>(GameFlowManager).startGame();
