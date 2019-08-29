@@ -1,15 +1,15 @@
 import {View3D} from "@game/View3D";
-import MeshBuilder = BABYLON.MeshBuilder;
-import StandardMaterial = BABYLON.StandardMaterial;
-import Color3 = BABYLON.Color3;
 import {Card3D} from "@game/cards/Card3D";
 import {di} from "../inversify.config";
 import {Metrics} from "@game/Metrics";
-import Axis = BABYLON.Axis;
 import {inject} from "inversify";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {ChipsManager} from "@game/chips/ChipsManager";
 import {StakeModel} from "@game/StakeModel";
+import MeshBuilder = BABYLON.MeshBuilder;
+import StandardMaterial = BABYLON.StandardMaterial;
+import Color3 = BABYLON.Color3;
+import Axis = BABYLON.Axis;
 
 export class Table3D extends View3D {
 

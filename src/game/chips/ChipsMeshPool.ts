@@ -1,4 +1,5 @@
 import {inject, injectable} from "inversify";
+import {Metrics} from "@game/Metrics";
 import Color3 = BABYLON.Color3;
 import Texture = BABYLON.Texture;
 import StandardMaterial = BABYLON.StandardMaterial;
@@ -7,7 +8,6 @@ import Vector4 = BABYLON.Vector4;
 import Mesh = BABYLON.Mesh;
 import Scene = BABYLON.Scene;
 import InstancedMesh = BABYLON.InstancedMesh;
-import {Metrics} from "@game/Metrics";
 
 @injectable()
 export default class ChipsMeshPool {

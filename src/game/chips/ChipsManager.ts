@@ -5,10 +5,8 @@ import {StakeModel} from "@game/StakeModel";
 import {inject, injectable} from "inversify";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {ChipStackConstants} from "@game/chips/constants";
-import {DefaultChipStackSoundConfig, IChipStackSoundConfig} from "@game/sounds/constants";
 import {di} from "../../inversify.config";
 import Scene = BABYLON.Scene;
-import EasingFunction = BABYLON.EasingFunction;
 import PowerEase = BABYLON.PowerEase;
 
 @injectable()

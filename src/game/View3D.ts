@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import {inject, injectable} from "inversify";
 import Scene = BABYLON.Scene;
 import TransformNode = BABYLON.TransformNode;
 

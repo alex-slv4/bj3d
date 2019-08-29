@@ -1,11 +1,10 @@
 import StandardMaterial = BABYLON.StandardMaterial;
-import {inject, injectable} from "inversify";
-import {CardTextureCache} from "@game/CardTextureCache";
-import {View3D} from "@game/View3D";
 import MeshBuilder = BABYLON.MeshBuilder;
 import Axis = BABYLON.Axis;
 import Color3 = BABYLON.Color3;
-import Texture = BABYLON.Texture;
+import {inject, injectable} from "inversify";
+import {CardTextureCache} from "@game/CardTextureCache";
+import {View3D} from "@game/View3D";
 import {Metrics} from "@game/Metrics";
 
 @injectable()
