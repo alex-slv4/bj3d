@@ -1,4 +1,5 @@
 import {inject, injectable} from "inversify";
+import {CoreTypes} from "../CoreTypes";
 import Scene = BABYLON.Scene;
 import TransformNode = BABYLON.TransformNode;
 
@@ -7,7 +8,7 @@ export abstract class View3D extends TransformNode {
 
     public readonly NAME: string = `${this.constructor.name}_node`;
 
-    @inject(Scene)
+    @inject(CoreTypes.mainScene)
     protected readonly scene: Scene;
 
     constructor() {

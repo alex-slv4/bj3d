@@ -24,7 +24,7 @@ export class Table3D extends View3D {
 
     init(...params: any): this {
 
-        const mesh = MeshBuilder.CreatePlane("game-table-plane", {width: 1500, height: 700});
+        const mesh = MeshBuilder.CreatePlane("game-table-plane", {width: 1500, height: 700}, this.scene);
         mesh.rotate(Axis.X, Math.PI / 2);
         mesh.freezeWorldMatrix();
 
@@ -41,8 +41,9 @@ export class Table3D extends View3D {
         cardNode.init();
         cardNode2.init();
 
+        cardNode.position.y = Metrics.CARD_DEPTH;
         cardNode2.position.x = Metrics.CARD_WIDTH/5;
-        cardNode2.position.y = Metrics.CARD_DEPTH;
+        cardNode2.position.y = Metrics.CARD_DEPTH * 2;
 
         return this;
     }

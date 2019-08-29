@@ -3,6 +3,8 @@ export const CoreTypes = {
         urlParams: Symbol("urlParams"),
         fpsMeter: Symbol("fpsMeter"),
     },
+    mainScene: Symbol("mainScene"),
+    uiScene: Symbol("uiScene"),
     card: Symbol("Card3D"),
     gameFlowManager: Symbol("gameFlowManager")
 };

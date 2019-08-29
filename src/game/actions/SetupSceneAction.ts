@@ -1,7 +1,9 @@
 import {Action} from "@core/actions/Action";
 import {inject, injectable} from "inversify";
-import GameCamera from "@game/GameCamera";
+import GameCamera from "@game/camera/GameCamera";
 import {Table3D} from "@game/Table3D";
+import {CoreTypes} from "../../CoreTypes";
+import {ChipsPanel} from "@game/chips/ChipsPanel";
 import Scene = BABYLON.Scene;
 import Vector3 = BABYLON.Vector3;
 import Color3 = BABYLON.Color3;
@@ -12,11 +14,17 @@ export class SetupSceneAction extends Action {
     @inject(GameCamera)
     private camera: GameCamera;
 
-    @inject(Scene)
+    @inject(CoreTypes.uiScene)
+    private uiScene: Scene;
+
+    @inject(CoreTypes.mainScene)
     private scene: Scene;
 
     @inject(Table3D)
     private table: Table3D;
+
+    @inject(ChipsPanel)
+    private chipsPanel: ChipsPanel;
 
     async execute(): Promise<any> {
         this.camera.create();
@@ -28,6 +36,11 @@ export class SetupSceneAction extends Action {
         const light2 = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
         light2.intensity = 1;
         light2.specular = Color3.White();
+
+        this.uiScene.addLight(light);
+        this.uiScene.addLight(light2);
+
+        this.chipsPanel.init();
 
         this.resolve();
     }

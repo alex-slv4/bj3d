@@ -15,7 +15,7 @@ export class Card3D extends View3D {
 
     init(...params: any[]): this {
         const billetMesh = this.generateBilletMesh();
-        const plane = MeshBuilder.CreatePlane("card-face", {width: Metrics.CARD_WIDTH, height: Metrics.CARD_HEIGHT});
+        const plane = MeshBuilder.CreatePlane("card-face", {width: Metrics.CARD_WIDTH, height: Metrics.CARD_HEIGHT}, this.scene);
         billetMesh.parent = this;
         plane.parent = this;
         plane.rotate(Axis.X, Math.PI / 2);

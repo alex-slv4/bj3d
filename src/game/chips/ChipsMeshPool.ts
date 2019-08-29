@@ -8,12 +8,14 @@ import Vector4 = BABYLON.Vector4;
 import Mesh = BABYLON.Mesh;
 import Scene = BABYLON.Scene;
 import InstancedMesh = BABYLON.InstancedMesh;
+import {CoreTypes} from "../../CoreTypes";
 
 @injectable()
 export default class ChipsMeshPool {
 
-    @inject(Scene)
+    @inject(CoreTypes.uiScene)
     private scene: Scene;
+
     private cachedTemplates: { [key: string]: Mesh } = {};
 
     get(color: Color3): InstancedMesh {
@@ -26,7 +28,7 @@ export default class ChipsMeshPool {
             material.diffuseColor = color;
             mesh.material = material;
             this.cachedTemplates[id] = mesh;
-            mesh.isVisible = false;
+            this.scene.removeMesh(mesh)
         }
         return this.cachedTemplates[id].createInstance("chip-instance-" + Math.random());
     }
@@ -48,7 +50,7 @@ export default class ChipsMeshPool {
             height: Metrics.CHIP_DEPTH,
             tessellation: 64,
             faceUV,
-        }, null);
+        }, this.scene);
 
         return mesh;
     }

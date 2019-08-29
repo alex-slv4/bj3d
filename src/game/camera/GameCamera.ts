@@ -8,12 +8,13 @@ import Vector3 = BABYLON.Vector3;
 import Engine = BABYLON.Engine;
 import ArcRotateCamera = BABYLON.ArcRotateCamera;
 import {inject, injectable} from "inversify";
-import {Metrics} from "@game/Metrics";
+import {Metrics} from "../Metrics";
+import {CoreTypes} from "../../CoreTypes";
 
 @injectable()
 export default class GameCamera {
 
-    @inject(Scene)
+    @inject(CoreTypes.mainScene)
     private scene: Scene;
 
     @inject(Engine)
