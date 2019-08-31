@@ -1,12 +1,13 @@
 import {Action} from "@core/actions/Action";
 import {inject, injectable} from "inversify";
 import GameCamera from "@game/camera/GameCamera";
-import {Table3D} from "@game/Table3D";
 import {CoreTypes} from "../../CoreTypes";
-import {ChipsPanel} from "@game/chips/ChipsPanel";
 import Scene = BABYLON.Scene;
 import Vector3 = BABYLON.Vector3;
 import Color3 = BABYLON.Color3;
+import {UISceneInteractionManager} from "../../managers/UISceneInteractionManager";
+import {di} from "../../inversify.config";
+import {SceneInteractionManager} from "../../managers/SceneInteractionManager";
 
 @injectable()
 export class SetupSceneAction extends Action {
@@ -19,12 +20,6 @@ export class SetupSceneAction extends Action {
 
     @inject(CoreTypes.mainScene)
     private scene: Scene;
-
-    @inject(Table3D)
-    private table: Table3D;
-
-    @inject(ChipsPanel)
-    private chipsPanel: ChipsPanel;
 
     async execute(): Promise<any> {
         this.camera.create();
@@ -40,7 +35,8 @@ export class SetupSceneAction extends Action {
         this.uiScene.addLight(light);
         this.uiScene.addLight(light2);
 
-        this.chipsPanel.init();
+        di.get(SceneInteractionManager).init();
+        di.get(UISceneInteractionManager).init();
 
         this.resolve();
     }

@@ -18,19 +18,21 @@ export default class ChipsMeshPool {
 
     private cachedTemplates: { [key: string]: Mesh } = {};
 
-    get(color: Color3): InstancedMesh {
+    get(color: Color3): Mesh | InstancedMesh {
 
         const id = ChipsMeshPool.getIdFromColor(color);
 
-        if (!this.cachedTemplates[id]) {
+        // if (!this.cachedTemplates[id]) {
             const mesh = this.createMesh();
             const material = this.createMaterialTemplate();
             material.diffuseColor = color;
             mesh.material = material;
-            this.cachedTemplates[id] = mesh;
-            this.scene.removeMesh(mesh)
-        }
-        return this.cachedTemplates[id].createInstance("chip-instance-" + Math.random());
+            // this.cachedTemplates[id] = mesh;
+            // this.scene.removeMesh(mesh)
+        // }
+        // return this.cachedTemplates[id].createInstance("chip-instance-" + Math.random());
+
+        return mesh; // TODO: remove!
     }
 
     createMesh(): Mesh {

@@ -21,6 +21,8 @@ import {GameFlowManagerBJ} from "./managers/GameFlowManagerBJ";
 import {UILayer} from "./ui/UILayer";
 import {SetupUIAction} from "@game/actions/SetupUIAction";
 import {ChipsPanel} from "@game/chips/ChipsPanel";
+import {UISceneInteractionManager} from "./managers/UISceneInteractionManager";
+import {SceneInteractionManager} from "./managers/SceneInteractionManager";
 
 export const di = new Container();
 
@@ -47,7 +49,9 @@ di.bind(SetupUIAction).toSelf();
 di.bind(SetupSceneAction).toSelf();
 di.bind(GameStartAction).toSelf();
 
-di.bind(ChipsPanel).toSelf();
+di.bind(ChipsPanel).toSelf().inSingletonScope();
+di.bind(UISceneInteractionManager).toSelf().inSingletonScope();
+di.bind(SceneInteractionManager).toSelf().inSingletonScope();
 
 di.bind(CoreTypes.debug.fpsMeter).toDynamicValue(() => {
     return new FPSMeter(document.getElementById("fps-meter") as HTMLElement, {
