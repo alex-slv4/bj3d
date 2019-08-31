@@ -49,7 +49,7 @@ export class BetModelBJ extends GlobalEventProvider {
     }
 
     changeState(): void {
-        debugger
+        // TODO: dispatch
     }
     clear(): void {
         this.TotalBet = 0;

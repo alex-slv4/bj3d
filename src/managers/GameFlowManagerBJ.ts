@@ -4,6 +4,9 @@ import {UpdateUIAction} from "@game/actions/UpdateUIAction";
 import {inject} from "inversify";
 import {HandsModel} from "@game/model/HandsModel";
 import {BetUtilBJ} from "@game/utils/BetUtilBJ";
+import {di} from "../inversify.config";
+import {PlaceBetAction} from "@game/actions/PlaceBetAction";
+import {DealAction} from "@game/actions/DealAction";
 
 export class GameFlowManagerBJ extends GameFlowManager {
 
@@ -21,6 +24,9 @@ export class GameFlowManagerBJ extends GameFlowManager {
 
     @inject(UpdateUIAction)
     private updateUIAction: UpdateUIAction;
+
+    @inject(PlaceBetAction)
+    private placeBetAction: PlaceBetAction;
 
     getStartFlow(): Action[] {
         return super.getStartFlow().concat([
@@ -52,7 +58,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         this.runFlow([
         //     di.get(LockUIAction).setParams(true),
         //     new HideWinningsAction(),
-        //     di.get(PlaceBetAction).setParams(handId, bet, true, instantly),
+            this.placeBetAction.setParams(handId, bet, true, instantly),
         //     di.get(LockUIAction).setParams(false),
             this.updateUIAction
         ]);
@@ -126,7 +132,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
             this.runFlow([
                 // di.get(HideUIAction),
                 // // new FocusHandAction(null).setParams(true),
-                // di.get(DealAction),
+                di.get(DealAction),
                 // di.get(DealAnimationAction),
                 // di.get(CardsDealtAction),
                 // di.get(ResultsAction)

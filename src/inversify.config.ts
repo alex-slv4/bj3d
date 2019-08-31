@@ -28,6 +28,8 @@ import {GameModel} from "@game/model/GameModelBJ";
 import {HandsModel} from "@game/model/HandsModel";
 import {BetModelBJ} from "@game/model/BetModelBJ";
 import {DealerModel} from "@game/model/DealerModel";
+import {PlaceBetAction} from "@game/actions/PlaceBetAction";
+import {DealAction} from "@game/actions/DealAction";
 
 export const di = new Container();
 
@@ -55,6 +57,8 @@ di.bind(DealerModel).toSelf().inSingletonScope(); //
 di.bind(BetUtilBJ).toSelf().inSingletonScope(); //
 di.bind(BetModelBJ).toSelf().inSingletonScope(); //
 di.bind(CoreTypes.gameFlowManager).to(GameFlowManagerBJ).inSingletonScope();
+di.bind(DealAction).toSelf(); //
+di.bind(PlaceBetAction).toSelf(); //
 di.bind(UpdateUIAction).toSelf(); //
 
 
