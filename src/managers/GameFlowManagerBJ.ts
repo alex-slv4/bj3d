@@ -1,5 +1,7 @@
 import {GameFlowManager} from "./GameFlowManager";
 import {Action} from "@core/actions/Action";
+import {UpdateUIAction} from "@game/actions/UpdateUIAction";
+import {di} from "../inversify.config";
 
 export class GameFlowManagerBJ extends GameFlowManager {
 
@@ -35,13 +37,13 @@ export class GameFlowManagerBJ extends GameFlowManager {
     }
     bet(handId: string, bet: number, instantly: boolean = false) {
         this.log(`place ${bet}$ at hand ${handId}`);
-        // this.runFlow([
+        this.runFlow([
         //     di.get(LockUIAction).setParams(true),
         //     new HideWinningsAction(),
         //     di.get(PlaceBetAction).setParams(handId, bet, true, instantly),
         //     di.get(LockUIAction).setParams(false),
-        //     di.get(UpdateUIAction)
-        // ]);
+            di.get<Action>(UpdateUIAction)
+        ]);
     }
 
     doubleBet(instantly: boolean = false) {
