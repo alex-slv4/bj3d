@@ -3,7 +3,9 @@
  */
 import {BetsHistory} from "@game/model/BetsHistory";
 import {GlobalEventProvider} from "@core/events/GlobalEventProvider";
+import {injectable} from "inversify";
 
+@injectable()
 export class BetModelBJ extends GlobalEventProvider {
     private _roundBalance: number = 0;
     private realBalance: number = 0;

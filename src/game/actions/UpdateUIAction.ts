@@ -21,6 +21,7 @@ export class UpdateUIAction extends Action {
     @inject(BetModelBJ)
     private betModel: BetModelBJ;
 
+    @inject(UILayer)
     private uiLayer: UILayer;
 
     public async execute() {

@@ -1,6 +1,7 @@
 import {StakeModel} from "@game/StakeModel";
-import {inject} from "inversify";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BetUtil {
 
     @inject(StakeModel)

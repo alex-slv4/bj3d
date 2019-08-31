@@ -1,7 +1,9 @@
 import {GameFlowManager} from "./GameFlowManager";
 import {Action} from "@core/actions/Action";
 import {UpdateUIAction} from "@game/actions/UpdateUIAction";
-import {di} from "../inversify.config";
+import {inject} from "inversify";
+import {HandsModel} from "@game/model/HandsModel";
+import {BetUtilBJ} from "@game/utils/BetUtilBJ";
 
 export class GameFlowManagerBJ extends GameFlowManager {
 
@@ -11,8 +13,18 @@ export class GameFlowManagerBJ extends GameFlowManager {
     // @inject(HandsModel)
     // private handsModel: HandsModel;
 
+    @inject(BetUtilBJ)
+    private betUtil: BetUtilBJ;
+
+    @inject(HandsModel)
+    private handsModel: HandsModel;
+
+    @inject(UpdateUIAction)
+    private updateUIAction: UpdateUIAction;
+
     getStartFlow(): Action[] {
         return super.getStartFlow().concat([
+            this.updateUIAction
             // di.get(ShowMainSceneActionBJ),
             // di.get(LockUIAction),
             // di.get(ShowSoundPopupAction),
@@ -42,7 +54,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     new HideWinningsAction(),
         //     di.get(PlaceBetAction).setParams(handId, bet, true, instantly),
         //     di.get(LockUIAction).setParams(false),
-            di.get<Action>(UpdateUIAction)
+            this.updateUIAction
         ]);
     }
 
@@ -54,7 +66,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     di.get(DoubleBetAction).setParams(true),
         //
         //     di.get(LockUIAction).setParams(false),
-        //     di.get(UpdateUIAction)
+        //     this.updateUIAction
         // ]);
     }
 
@@ -65,7 +77,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     di.get(UndoActionBJ),
         //     di.get(LockUIAction).setParams(false),
         //     di.get(ShowLastLimitsAction),
-        //     di.get(UpdateUIAction)
+        //     this.updateUIAction
         // ]);
     }
 
@@ -75,7 +87,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     di.get(HideUIAction).setParams(false),
         //     new HideWinningsAction(),
         //     di.get(RebetAction),
-        //     di.get(UpdateUIAction)
+        //     this.updateUIAction
         // ]);
     }
     rebetAndDeal() {
@@ -103,27 +115,27 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     // di.get(HideUIAction),
         //     di.get(ClearAction),
         //     di.get(ShowLastLimitsAction),
-        //     di.get(UpdateUIAction),
+        //     this.updateUIAction,
         //     //new PlaceYourBetsAction()
         // ]);
     }
 
     deal() {
-        this.log("Deal")
-        // if (this.betUtil.canDeal(this.handsModel)) {
-        //     this.runFlow([
-        //         di.get(HideUIAction),
-        //         // new FocusHandAction(null).setParams(true),
-        //         di.get(DealAction),
-        //         di.get(DealAnimationAction),
-        //         di.get(CardsDealtAction),
-        //         di.get(ResultsAction)
-        //     ]);
-        // } else {
-        //     this.runFlow([
-        //         di.get(UpdateUIAction)
-        //     ]);
-        // }
+        this.log("Deal");
+        if (this.betUtil.canDeal(this.handsModel)) {
+            this.runFlow([
+                // di.get(HideUIAction),
+                // // new FocusHandAction(null).setParams(true),
+                // di.get(DealAction),
+                // di.get(DealAnimationAction),
+                // di.get(CardsDealtAction),
+                // di.get(ResultsAction)
+            ]);
+        } else {
+            this.runFlow([
+                this.updateUIAction
+            ]);
+        }
     }
 
     hit() {
@@ -180,7 +192,7 @@ export class GameFlowManagerBJ extends GameFlowManager {
         //     di.get(HideUIAction),
         //     di.get(InsureDecideAction).setParams(agree, toAll),
         //     di.get(GameEndAction),
-        //     di.get(UpdateUIAction)
+        //     this.updateUIAction
         // ]);
     }
 }

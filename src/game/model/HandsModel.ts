@@ -2,6 +2,7 @@
  * @author alexander.slavschik
  */
 import {HandModelBJ} from "./HandModelBJ";
+import {injectable} from "inversify";
 
 function arrayClear(arr: any[]): void {
     arr.splice(0, arr.length);
@@ -11,6 +12,7 @@ function arrayReplace(arr1: any[], arr2: any[]): void {
     arr1.splice.apply(arr1, [0, arr1.length].concat(arr2));
 }
 
+@injectable()
 export class HandsModel {
 
     // @ts-ignore

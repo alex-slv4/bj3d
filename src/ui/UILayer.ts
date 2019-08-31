@@ -15,6 +15,7 @@ export class UILayer extends GlobalEventProvider {
     }
 
     applyState(mask: number) {
-        // this.root.setState()
+        this.root.buttonsMask = mask;
+        this.root.forceUpdate()
     }
 }

@@ -3,7 +3,9 @@
  */
 import {log_trace} from "@core/log";
 import {ICard} from "@game/model/ICard";
+import {injectable} from "inversify";
 
+@injectable()
 export class HandModel {
 
     protected _cardList: ICard[] = [];

@@ -4,7 +4,9 @@
 import {BaseHandModelBJ} from "./BaseHandModelBJ";
 import {BlackJackConstants} from "@game/constants";
 import {CardRank, ICard} from "@game/model/ICard";
+import {injectable} from "inversify";
 
+@injectable()
 export class DealerModel extends BaseHandModelBJ {
 
     private _cardsShown: number = 0;

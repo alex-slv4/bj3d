@@ -8,7 +8,7 @@ import {inject, injectable} from "inversify";
 @injectable()
 export class GameModel {
 
-    protected _roundEnded: boolean;
+    protected _roundEnded: boolean = true;
     protected _totalBet: number;
     protected _totalWin: number;
     protected _insufficientBalance: boolean = false;

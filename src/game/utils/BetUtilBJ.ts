@@ -1,9 +1,10 @@
 import {BetUtil} from "@game/utils/BetUtil";
-import {inject} from "inversify";
+import {inject, injectable} from "inversify";
 import {HandsModel} from "@game/model/HandsModel";
 import {HandModelBJ} from "@game/model/HandModelBJ";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 
+@injectable()
 export class BetUtilBJ extends BetUtil {
 
     @inject(HandsModel)

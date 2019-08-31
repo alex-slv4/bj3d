@@ -12,7 +12,6 @@ import {Card3D} from "@game/cards/Card3D";
 import {CoreTypes} from "./CoreTypes";
 import {Table3D} from "@game/Table3D";
 import {GameStartAction} from "@game/actions/GameStartAction";
-import {GameFlowManager} from "./managers/GameFlowManager";
 import {SequenceAction} from "@core/actions/SequenceAction";
 import {EventDispatcher} from "@core/events/EventDispatcher";
 import * as EventEmitter from "eventemitter3";
@@ -23,6 +22,12 @@ import {SetupUIAction} from "@game/actions/SetupUIAction";
 import {ChipsPanel} from "@game/chips/ChipsPanel";
 import {UISceneInteractionManager} from "./managers/UISceneInteractionManager";
 import {SceneInteractionManager} from "./managers/SceneInteractionManager";
+import {UpdateUIAction} from "@game/actions/UpdateUIAction";
+import {BetUtilBJ} from "@game/utils/BetUtilBJ";
+import {GameModel} from "@game/model/GameModelBJ";
+import {HandsModel} from "@game/model/HandsModel";
+import {BetModelBJ} from "@game/model/BetModelBJ";
+import {DealerModel} from "@game/model/DealerModel";
 
 export const di = new Container();
 
@@ -42,7 +47,17 @@ di.bind(CardTextureCache).toSelf().inSingletonScope();
 di.bind(EventDispatcher).toSelf().inSingletonScope();
 di.bind(SequenceAction).toSelf();
 
+
+
+di.bind(HandsModel).toSelf().inSingletonScope(); //
+di.bind(GameModel).toSelf().inSingletonScope(); //
+di.bind(DealerModel).toSelf().inSingletonScope(); //
+di.bind(BetUtilBJ).toSelf().inSingletonScope(); //
+di.bind(BetModelBJ).toSelf().inSingletonScope(); //
 di.bind(CoreTypes.gameFlowManager).to(GameFlowManagerBJ).inSingletonScope();
+di.bind(UpdateUIAction).toSelf(); //
+
+
 
 di.bind(UILayer).toSelf().inSingletonScope();
 di.bind(SetupUIAction).toSelf();
