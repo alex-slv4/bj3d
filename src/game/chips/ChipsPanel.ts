@@ -13,6 +13,7 @@ import Space = BABYLON.Space;
 import Mesh = BABYLON.Mesh;
 import UniversalCamera = BABYLON.UniversalCamera;
 import Vector2 = BABYLON.Vector2;
+import InstancedMesh = BABYLON.InstancedMesh;
 
 enum DragState {
     NONE,
@@ -38,14 +39,22 @@ export class ChipsPanel extends View3D {
     // @inject(CoreTypes.gameFlowManager) FIXME: why?
     private flowManager: GameFlowManagerBJ;
 
-
+    private appearanceAnimation: BABYLON.Animation;
     private startPoint: Vector2;
     private dragState: DragState = DragState.NONE;
     private snappedChip: Mesh;
+    private snappedChipInstance: InstancedMesh;
 
     init(...params: any): this {
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
+
+        this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
+        const keys = [
+            {frame: 0, value: Metrics.CHIP_DIAMETER},
+            {frame: 30, value: -Metrics.CHIP_DIAMETER * 0.5},
+        ];
+        this.appearanceAnimation.setKeys(keys);
 
         this.stakeModel.getAvailableChips().forEach((amount, i) => {
             let iChipView = this.chipFactory.get(amount);
@@ -109,20 +118,39 @@ export class ChipsPanel extends View3D {
     private _updateScroll(evt: PointerEvent) {
         var offsetX = evt.movementX || evt.mozMovementX || evt.webkitMovementX || evt.msMovementX || 0;
 
-        const sensibility = 5;
-        // log_trace(offsetX)
-        this.camera.position.x += offsetX / sensibility;
+        this.camera.position.x += offsetX / window.devicePixelRatio;
     }
     private _dragSnapped(event: PointerEvent) {
 
     }
     private _snap(mesh: Mesh, event?: PointerEvent) {
         this.snappedChip = mesh;
+        var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
+
+        this.snappedChipInstance = this.snappedChip.createInstance("chip" + Math.random());
+        this.snappedChipInstance.addBehavior(pointerDragBehavior);
+        pointerDragBehavior.startDrag();
+        // this.snappedChip.isVisible = false;
+        // this.snappedChip.position.z = Metrics.CHIP_DIAMETER;
+        this.snappedChip.animations = [this.appearanceAnimation];
+        this.uiScene.beginAnimation(this.snappedChip, 0, 30);
+
         log_debug("we are drag", this.snappedChip)
     }
     public stopDrag(event: PointerEvent) {
-        log_debug("stopDrag");
+        log_debug("stopDrag", this.camera.position.x);
         this.dragState = DragState.NONE;
+
+        if (this.snappedChip) {
+            // this.snappedChip.isVisible = true;
+            this.uiScene.stopAnimation(this.snappedChip);
+            this.snappedChip.position.z = -Metrics.CHIP_DIAMETER * 0.5;
+        }
+        if (this.snappedChipInstance) {
+            this.snappedChipInstance.dispose();
+        }
+
+        delete this.snappedChipInstance;
         delete this.startPoint;
         delete this.snappedChip;
     }
