@@ -30,6 +30,7 @@ import {BetModelBJ} from "@game/model/BetModelBJ";
 import {DealerModel} from "@game/model/DealerModel";
 import {PlaceBetAction} from "@game/actions/PlaceBetAction";
 import {DealAction} from "@game/actions/DealAction";
+import {InteractionManager} from "./managers/InteractionManager";
 
 export const di = new Container();
 
@@ -69,6 +70,9 @@ di.bind(SetupSceneAction).toSelf();
 di.bind(GameStartAction).toSelf();
 
 di.bind(ChipsPanel).toSelf().inSingletonScope();
+
+
+di.bind(InteractionManager).toSelf().inSingletonScope();
 di.bind(UISceneInteractionManager).toSelf().inSingletonScope();
 di.bind(SceneInteractionManager).toSelf().inSingletonScope();
 

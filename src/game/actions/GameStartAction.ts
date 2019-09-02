@@ -19,7 +19,7 @@ export class GameStartAction extends Action {
     async execute(): Promise<any> {
 
         await this.cardsTextureCache.preload("assets/cards-all.svg");
-        await this.cardsTextureCache.generate(5);
+        await this.cardsTextureCache.generate(2);
 
         this.table.init();
         this.chipsPanel.init();

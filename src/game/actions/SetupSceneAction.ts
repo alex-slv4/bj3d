@@ -8,6 +8,7 @@ import Color3 = BABYLON.Color3;
 import {UISceneInteractionManager} from "../../managers/UISceneInteractionManager";
 import {di} from "../../inversify.config";
 import {SceneInteractionManager} from "../../managers/SceneInteractionManager";
+import {InteractionManager} from "../../managers/InteractionManager";
 
 @injectable()
 export class SetupSceneAction extends Action {
@@ -35,8 +36,9 @@ export class SetupSceneAction extends Action {
         this.uiScene.addLight(light);
         this.uiScene.addLight(light2);
 
-        di.get(SceneInteractionManager).init();
-        di.get(UISceneInteractionManager).init();
+        di.get(InteractionManager).init();
+        // di.get(SceneInteractionManager).init();
+        // di.get(UISceneInteractionManager).init();
 
         this.resolve();
     }
