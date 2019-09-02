@@ -14,6 +14,7 @@ import Mesh = BABYLON.Mesh;
 import UniversalCamera = BABYLON.UniversalCamera;
 import Vector2 = BABYLON.Vector2;
 import InstancedMesh = BABYLON.InstancedMesh;
+import EasingFunction = BABYLON.EasingFunction;
 
 enum DragState {
     NONE,
@@ -49,9 +50,13 @@ export class ChipsPanel extends View3D {
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
 
-        this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
+        this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
+        let easingFunction = new BABYLON.SineEase();
+        easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEOUT);
+        this.appearanceAnimation.setEasingFunction(easingFunction);
+
         const keys = [
-            {frame: 0, value: Metrics.CHIP_DIAMETER},
+            {frame: 0, value: Metrics.CHIP_DIAMETER * 0.5},
             {frame: 30, value: -Metrics.CHIP_DIAMETER * 0.5},
         ];
         this.appearanceAnimation.setKeys(keys);
@@ -119,6 +124,9 @@ export class ChipsPanel extends View3D {
         var offsetX = evt.movementX || evt.mozMovementX || evt.webkitMovementX || evt.msMovementX || 0;
 
         this.camera.position.x += offsetX / window.devicePixelRatio;
+        if (this.camera.position.x < 0) {
+            this.camera.position.x = 0
+        }
     }
     private _dragSnapped(event: PointerEvent) {
 
