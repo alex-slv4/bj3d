@@ -45,6 +45,7 @@ export class ChipsPanel extends View3D {
     private dragState: DragState = DragState.NONE;
     private snappedChip: Mesh;
     private snappedChipInstance: InstancedMesh;
+    private cameraMax: number;
 
     init(...params: any): this {
 
@@ -61,7 +62,8 @@ export class ChipsPanel extends View3D {
         ];
         this.appearanceAnimation.setKeys(keys);
 
-        this.stakeModel.getAvailableChips().forEach((amount, i) => {
+        let availableChips = this.stakeModel.getAvailableChips();
+        availableChips.forEach((amount, i) => {
             let iChipView = this.chipFactory.get(amount);
             iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
             // Vector3.Right().add(Vector3.One().scale(Metrics.CHIP_DIAMETER))
@@ -72,6 +74,7 @@ export class ChipsPanel extends View3D {
             // @ts-ignore FIXME: temporary solution to bind data, again...
             iChipView.mesh["chipValue"] = amount;
         });
+        this.cameraMax = (availableChips.length - 1) * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
 
         return this;
     }
@@ -126,6 +129,9 @@ export class ChipsPanel extends View3D {
         this.camera.position.x += offsetX / window.devicePixelRatio;
         if (this.camera.position.x < 0) {
             this.camera.position.x = 0
+        }
+        if (this.camera.position.x > this.cameraMax) {
+            this.camera.position.x = this.cameraMax;
         }
     }
     private _dragSnapped(event: PointerEvent) {
