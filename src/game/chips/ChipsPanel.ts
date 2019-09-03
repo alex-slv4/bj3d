@@ -47,6 +47,8 @@ export class ChipsPanel extends View3D {
     private snappedChipInstance: InstancedMesh;
     private cameraMax: number;
 
+    private assetsContainer: BABYLON.AssetContainer = new BABYLON.AssetContainer(this.scene);
+
     init(...params: any): this {
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
@@ -70,7 +72,6 @@ export class ChipsPanel extends View3D {
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
             iChipView.mesh.position.z = -Metrics.CHIP_DIAMETER * 0.5;
             iChipView.mesh.parent = this;
-
             // @ts-ignore FIXME: temporary solution to bind data, again...
             iChipView.mesh["chipValue"] = amount;
         });
@@ -141,7 +142,12 @@ export class ChipsPanel extends View3D {
         this.snappedChip = mesh;
         var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
 
-        this.snappedChipInstance = this.snappedChip.createInstance("chip" + Math.random());
+        // @ts-ignore
+        let amount = mesh["chipValue"];
+        this.snappedChipInstance = this.chipFactory.get(amount).mesh as InstancedMesh;
+        this.snappedChipInstance.position = mesh.position.clone();
+        this.snappedChipInstance.rotationQuaternion = mesh.rotationQuaternion!.clone();
+
         this.snappedChipInstance.addBehavior(pointerDragBehavior);
         pointerDragBehavior.startDrag();
         // this.snappedChip.isVisible = false;
