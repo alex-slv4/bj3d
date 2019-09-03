@@ -16,6 +16,8 @@ import Vector2 = BABYLON.Vector2;
 import InstancedMesh = BABYLON.InstancedMesh;
 import EasingFunction = BABYLON.EasingFunction;
 import MeshBuilder = BABYLON.MeshBuilder;
+import Vector3 = BABYLON.Vector3;
+import TransformNode = BABYLON.TransformNode;
 
 enum DragState {
     NONE,
@@ -47,11 +49,15 @@ export class ChipsPanel extends View3D {
     private snappedChip: Mesh;
     private snappedChipInstance: InstancedMesh;
     private cameraMax: number;
+    private chipsNode: TransformNode = new TransformNode("chips-container", this.uiScene);
 
     private plane: Mesh;
+    private startScrollPoint: Vector3;
 
     init(...params: any): this {
         const availableChips = this.stakeModel.getAvailableChips();
+
+        this.chipsNode.parent = this;
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
         this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.uiScene);
@@ -79,7 +85,7 @@ export class ChipsPanel extends View3D {
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
             iChipView.mesh.position.y = Metrics.CHIP_DEPTH;
             iChipView.mesh.position.z = -Metrics.CHIP_DIAMETER * 0.5;
-            iChipView.mesh.parent = this;
+            iChipView.mesh.parent = this.chipsNode;
             // @ts-ignore FIXME: temporary solution to bind data, again...
             iChipView.mesh["chipValue"] = amount;
         });
@@ -128,20 +134,25 @@ export class ChipsPanel extends View3D {
                             this.dragState = DragState.SCROLLING;
                         }
                     }
+                    if (this.dragState === DragState.SCROLLING) {
+                        // start drag
+                        let pickInfo = this.uiScene.pick(event.clientX, event.clientY, (mesh) => mesh === this.plane)!;
+                        this.startScrollPoint = pickInfo.pickedPoint!;
+                        log_debug("start!", this.startScrollPoint.toString());
+
+                    }
                     break;
             }
         }
     }
     private _updateScroll(evt: PointerEvent) {
-        var offsetX = evt.movementX || evt.mozMovementX || evt.webkitMovementX || evt.msMovementX || 0;
+        console.time("this.uiScene.pick");
+        let pickInfo = this.uiScene.pick(evt.clientX, evt.clientY, (mesh) => mesh === this.plane)!;
+        console.timeEnd("this.uiScene.pick");
 
-        this.camera.position.x += offsetX / window.devicePixelRatio;
-        if (this.camera.position.x < 0) {
-            this.camera.position.x = 0
-        }
-        if (this.camera.position.x > this.cameraMax) {
-            this.camera.position.x = this.cameraMax;
-        }
+        let movedPoint = pickInfo.pickedPoint!;
+        this.startScrollPoint = movedPoint;
+        this.chipsNode.position.x = movedPoint.x;
     }
     private _dragSnapped(event: PointerEvent) {
 
@@ -158,8 +169,6 @@ export class ChipsPanel extends View3D {
 
         this.snappedChipInstance.addBehavior(pointerDragBehavior);
         pointerDragBehavior.startDrag();
-        // this.snappedChip.isVisible = false;
-        // this.snappedChip.position.z = Metrics.CHIP_DIAMETER;
         this.snappedChip.animations = [this.appearanceAnimation];
         this.uiScene.beginAnimation(this.snappedChip, 0, 30);
 

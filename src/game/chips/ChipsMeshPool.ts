@@ -48,7 +48,7 @@ export default class ChipsMeshPool {
         const mesh = MeshBuilder.CreateCylinder("chip", {
             diameter: Metrics.CHIP_DIAMETER,
             height: Metrics.CHIP_DEPTH,
-            tessellation: 64,
+            tessellation: 24,
             faceUV,
         }, this.scene);
 
@@ -66,6 +66,7 @@ export default class ChipsMeshPool {
         material.emissiveColor = Color3.Black();
         material.emissiveTexture = texture;
         material.bumpTexture = bumpTexture;
+        material.wireframe = true;
 
         return material;
     }
