@@ -6,7 +6,7 @@ import {CoreTypes} from "../../CoreTypes";
 import {Metrics} from "@game/Metrics";
 import {GameFlowManagerBJ} from "../../managers/GameFlowManagerBJ";
 import {di} from "../../inversify.config";
-import {log_debug, log_trace, log_warn} from "@core/log";
+import {log_debug, log_warn} from "@core/log";
 import Scene = BABYLON.Scene;
 import Axis = BABYLON.Axis;
 import Space = BABYLON.Space;
@@ -16,10 +16,9 @@ import Vector2 = BABYLON.Vector2;
 import InstancedMesh = BABYLON.InstancedMesh;
 import EasingFunction = BABYLON.EasingFunction;
 import MeshBuilder = BABYLON.MeshBuilder;
-import Vector3 = BABYLON.Vector3;
 import TransformNode = BABYLON.TransformNode;
 import AbstractMesh = BABYLON.AbstractMesh;
-import PickingInfo = BABYLON.PickingInfo;
+import Nullable = BABYLON.Nullable;
 
 enum DragState {
     NONE,
@@ -50,13 +49,9 @@ export class ChipsPanel extends View3D {
     private dragState: DragState = DragState.NONE;
     private snappedChip: Mesh;
     private snappedChipInstance: InstancedMesh;
-    private cameraMax: number;
     private chipsNode: TransformNode = new TransformNode("chips-container", this.uiScene);
-
     private plane: Mesh;
-    private startScrollPoint: Vector3;
     private chipMeshes: AbstractMesh[] = [];
-    private startScrollPointMouse: Vector2;
 
     init(...params: any): this {
         const availableChips = this.stakeModel.getAvailableChips();
@@ -87,7 +82,6 @@ export class ChipsPanel extends View3D {
         availableChips.forEach((amount, i) => {
             let iChipView = this.chipFactory.get(amount);
             iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
-            // Vector3.Right().add(Vector3.One().scale(Metrics.CHIP_DIAMETER))
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
             iChipView.mesh.parent = this.chipsNode;
             iChipView.mesh.isPickable = false;
@@ -96,7 +90,6 @@ export class ChipsPanel extends View3D {
 
             this.chipMeshes.push(iChipView.mesh)
         });
-        this.cameraMax = (availableChips.length - 1) * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
 
         return this;
     }
@@ -120,35 +113,33 @@ export class ChipsPanel extends View3D {
                         const vec = this.startPoint.subtract(dragPoint);
                         const angle = Math.atan2(vec.y, vec.x);
 
-                        let asd = Math.PI / 4; // TODO: move to constants
-                        if (angle > asd && angle < Math.PI - asd) {
-                            let pickInfo = this.pickPlane(this.startPoint.x, this.startPoint.y);
-                            let pickedX = pickInfo.pickedPoint!.x - this.chipsNode.position.x;
-                            let chipIndex = Math.round(pickedX / (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH));
-                            if (chipIndex > 0 && chipIndex < this.chipMeshes.length) {
-                                this._snap(this.chipMeshes[chipIndex] as Mesh);
+                        const angleDither = Math.PI / 4; // TODO: move to constants
+                        if (angle > angleDither && angle < Math.PI - angleDither) {
+                            const theChip = this.getChipAt(event.clientX, event.clientY);
+                            if (theChip) {
+                                this._snap(theChip);
                                 this.dragState = DragState.PULL;
                                 log_warn("Snap");
                             }
                         } else {
                             this.dragState = DragState.SCROLL;
-                            this.startScrollPoint = this.chipsNode.position.clone();
+                            // TODO: move to constructor
+                            var pointerDragBehavior = new BABYLON.PointerDragBehavior({dragAxis: Axis.X});
+                            pointerDragBehavior.updateDragPlane = false;
+                            this.chipsNode.addBehavior(pointerDragBehavior);
+                            pointerDragBehavior.startDrag(undefined, undefined, this.chipsNode.absolutePosition);
                         }
                     }
                     break;
                 case DragState.SCROLL:
-                    this._updateScroll(event);
+                    // this._updateScroll(event);
                     break;
             }
         }
     }
-    private _updateScroll(evt: PointerEvent) {
-        let pickInfo = this.pickPlane(evt.clientX, evt.clientY);
-        let movedPoint = pickInfo.pickedPoint!;
-        this.chipsNode.position.x = this.startScrollPoint.x + movedPoint.x;
-    }
     private _snap(mesh: Mesh) {
         this.snappedChip = mesh;
+        // TODO: move to constructor
         var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
 
         // @ts-ignore
@@ -165,16 +156,21 @@ export class ChipsPanel extends View3D {
 
         log_debug("we are drag", this.snappedChip)
     }
-    public pickPlane(x: number, y: number): PickingInfo {
-        let pickInfo = this.uiScene.pick(x, y, mesh => mesh === this.plane)!;
-        return pickInfo;
+
+    public getChipAt(screenX: number, screenY: number): Nullable<Mesh> {
+        let pickInfo = this.uiScene.pick(screenX, screenY, mesh => mesh === this.plane)!;
+        let pickedX = pickInfo.pickedPoint!.x - this.chipsNode.position.x;
+        let chipIndex = Math.round(pickedX / (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH));
+        if (chipIndex > 0 && chipIndex < this.chipMeshes.length) {
+            return this.chipMeshes[chipIndex] as Mesh;
+        }
+        return null;
     }
     public stopDrag(event: PointerEvent) {
         log_debug("stopDrag", this.camera.position.x);
         this.dragState = DragState.NONE;
 
         if (this.snappedChip) {
-            // this.snappedChip.isVisible = true;
             this.uiScene.stopAnimation(this.snappedChip);
             this.snappedChip.position.z = 0;
         }
