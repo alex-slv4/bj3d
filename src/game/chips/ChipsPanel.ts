@@ -18,11 +18,13 @@ import EasingFunction = BABYLON.EasingFunction;
 import MeshBuilder = BABYLON.MeshBuilder;
 import Vector3 = BABYLON.Vector3;
 import TransformNode = BABYLON.TransformNode;
+import AbstractMesh = BABYLON.AbstractMesh;
+import PickingInfo = BABYLON.PickingInfo;
 
 enum DragState {
     NONE,
-    DRAGGING,
-    SCROLLING
+    PULL,
+    SCROLL
 }
 
 @injectable()
@@ -53,11 +55,15 @@ export class ChipsPanel extends View3D {
 
     private plane: Mesh;
     private startScrollPoint: Vector3;
+    private chipMeshes: AbstractMesh[] = [];
+    private startScrollPointMouse: Vector2;
 
     init(...params: any): this {
         const availableChips = this.stakeModel.getAvailableChips();
 
         this.chipsNode.parent = this;
+        this.chipsNode.position.z = -Metrics.CHIP_DIAMETER * 0.5;
+        this.chipsNode.position.y = Metrics.CHIP_DEPTH;
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
         this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.uiScene);
@@ -73,8 +79,8 @@ export class ChipsPanel extends View3D {
         this.appearanceAnimation.setEasingFunction(easingFunction);
 
         const keys = [
-            {frame: 0, value: Metrics.CHIP_DIAMETER * 0.5},
-            {frame: 30, value: -Metrics.CHIP_DIAMETER * 0.5},
+            {frame: 0, value: Metrics.CHIP_DIAMETER},
+            {frame: 30, value: 0},
         ];
         this.appearanceAnimation.setKeys(keys);
 
@@ -83,11 +89,12 @@ export class ChipsPanel extends View3D {
             iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
             // Vector3.Right().add(Vector3.One().scale(Metrics.CHIP_DIAMETER))
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
-            iChipView.mesh.position.y = Metrics.CHIP_DEPTH;
-            iChipView.mesh.position.z = -Metrics.CHIP_DIAMETER * 0.5;
             iChipView.mesh.parent = this.chipsNode;
+            iChipView.mesh.isPickable = false;
             // @ts-ignore FIXME: temporary solution to bind data, again...
             iChipView.mesh["chipValue"] = amount;
+
+            this.chipMeshes.push(iChipView.mesh)
         });
         this.cameraMax = (availableChips.length - 1) * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
 
@@ -106,12 +113,6 @@ export class ChipsPanel extends View3D {
         if (this.startPoint) {
 
             switch (this.dragState) {
-                case DragState.SCROLLING:
-                    this._updateScroll(event);
-                    break;
-                case DragState.DRAGGING:
-                    this._dragSnapped(event);
-                    break;
                 case DragState.NONE:
                     let dragPoint = new Vector2(event.clientX, event.clientY);
                     let distance = Vector2.Distance(dragPoint, this.startPoint);
@@ -121,43 +122,32 @@ export class ChipsPanel extends View3D {
 
                         let asd = Math.PI / 4; // TODO: move to constants
                         if (angle > asd && angle < Math.PI - asd) {
-                            log_warn("Snap");
-                            let pickInfo = this.uiScene.pick(this.startPoint.x, this.startPoint.y, (mesh) => mesh !== this.plane);
-
-                            if (pickInfo!.pickedMesh) {
-                                this._snap(pickInfo!.pickedMesh as Mesh, event);
-                                this.dragState = DragState.DRAGGING;
-                            } else {
-                                this.dragState = DragState.SCROLLING;
+                            let pickInfo = this.pickPlane(this.startPoint.x, this.startPoint.y);
+                            let pickedX = pickInfo.pickedPoint!.x - this.chipsNode.position.x;
+                            let chipIndex = Math.round(pickedX / (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH));
+                            if (chipIndex > 0 && chipIndex < this.chipMeshes.length) {
+                                this._snap(this.chipMeshes[chipIndex] as Mesh);
+                                this.dragState = DragState.PULL;
+                                log_warn("Snap");
                             }
                         } else {
-                            this.dragState = DragState.SCROLLING;
+                            this.dragState = DragState.SCROLL;
+                            this.startScrollPoint = this.chipsNode.position.clone();
                         }
                     }
-                    if (this.dragState === DragState.SCROLLING) {
-                        // start drag
-                        let pickInfo = this.uiScene.pick(event.clientX, event.clientY, (mesh) => mesh === this.plane)!;
-                        this.startScrollPoint = pickInfo.pickedPoint!;
-                        log_debug("start!", this.startScrollPoint.toString());
-
-                    }
+                    break;
+                case DragState.SCROLL:
+                    this._updateScroll(event);
                     break;
             }
         }
     }
     private _updateScroll(evt: PointerEvent) {
-        console.time("this.uiScene.pick");
-        let pickInfo = this.uiScene.pick(evt.clientX, evt.clientY, (mesh) => mesh === this.plane)!;
-        console.timeEnd("this.uiScene.pick");
-
+        let pickInfo = this.pickPlane(evt.clientX, evt.clientY);
         let movedPoint = pickInfo.pickedPoint!;
-        this.startScrollPoint = movedPoint;
-        this.chipsNode.position.x = movedPoint.x;
+        this.chipsNode.position.x = this.startScrollPoint.x + movedPoint.x;
     }
-    private _dragSnapped(event: PointerEvent) {
-
-    }
-    private _snap(mesh: Mesh, event?: PointerEvent) {
+    private _snap(mesh: Mesh) {
         this.snappedChip = mesh;
         var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
 
@@ -166,6 +156,7 @@ export class ChipsPanel extends View3D {
         this.snappedChipInstance = this.chipFactory.get(amount).mesh as InstancedMesh;
         this.snappedChipInstance.position = mesh.position.clone();
         this.snappedChipInstance.rotationQuaternion = mesh.rotationQuaternion!.clone();
+        this.snappedChipInstance.parent = this.chipsNode;
 
         this.snappedChipInstance.addBehavior(pointerDragBehavior);
         pointerDragBehavior.startDrag();
@@ -174,6 +165,10 @@ export class ChipsPanel extends View3D {
 
         log_debug("we are drag", this.snappedChip)
     }
+    public pickPlane(x: number, y: number): PickingInfo {
+        let pickInfo = this.uiScene.pick(x, y, mesh => mesh === this.plane)!;
+        return pickInfo;
+    }
     public stopDrag(event: PointerEvent) {
         log_debug("stopDrag", this.camera.position.x);
         this.dragState = DragState.NONE;
@@ -181,7 +176,7 @@ export class ChipsPanel extends View3D {
         if (this.snappedChip) {
             // this.snappedChip.isVisible = true;
             this.uiScene.stopAnimation(this.snappedChip);
-            this.snappedChip.position.z = -Metrics.CHIP_DIAMETER * 0.5;
+            this.snappedChip.position.z = 0;
         }
         if (this.snappedChipInstance) {
             this.snappedChipInstance.dispose();
