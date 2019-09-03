@@ -15,6 +15,7 @@ import UniversalCamera = BABYLON.UniversalCamera;
 import Vector2 = BABYLON.Vector2;
 import InstancedMesh = BABYLON.InstancedMesh;
 import EasingFunction = BABYLON.EasingFunction;
+import MeshBuilder = BABYLON.MeshBuilder;
 
 enum DragState {
     NONE,
@@ -47,11 +48,18 @@ export class ChipsPanel extends View3D {
     private snappedChipInstance: InstancedMesh;
     private cameraMax: number;
 
-    private assetsContainer: BABYLON.AssetContainer = new BABYLON.AssetContainer(this.scene);
+    private plane: Mesh;
 
     init(...params: any): this {
+        const availableChips = this.stakeModel.getAvailableChips();
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
+        this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.uiScene);
+        this.plane.rotate(Axis.X, Math.PI / 2);
+        this.plane.scaling.x = availableChips.length * 2;
+        this.plane.position.z = -Metrics.CHIP_DIAMETER * 0.5;
+        this.plane.parent = this;
+        this.plane.isVisible = false;
 
         this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
         let easingFunction = new BABYLON.SineEase();
@@ -64,12 +72,12 @@ export class ChipsPanel extends View3D {
         ];
         this.appearanceAnimation.setKeys(keys);
 
-        let availableChips = this.stakeModel.getAvailableChips();
         availableChips.forEach((amount, i) => {
             let iChipView = this.chipFactory.get(amount);
             iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
             // Vector3.Right().add(Vector3.One().scale(Metrics.CHIP_DIAMETER))
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
+            iChipView.mesh.position.y = Metrics.CHIP_DEPTH;
             iChipView.mesh.position.z = -Metrics.CHIP_DIAMETER * 0.5;
             iChipView.mesh.parent = this;
             // @ts-ignore FIXME: temporary solution to bind data, again...
@@ -108,7 +116,7 @@ export class ChipsPanel extends View3D {
                         let asd = Math.PI / 4; // TODO: move to constants
                         if (angle > asd && angle < Math.PI - asd) {
                             log_warn("Snap");
-                            let pickInfo = this.uiScene.pick(this.startPoint.x, this.startPoint.y, (mesh) => mesh.id.indexOf("chip") !== -1);
+                            let pickInfo = this.uiScene.pick(this.startPoint.x, this.startPoint.y, (mesh) => mesh !== this.plane);
 
                             if (pickInfo!.pickedMesh) {
                                 this._snap(pickInfo!.pickedMesh as Mesh, event);
