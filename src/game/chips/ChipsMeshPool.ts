@@ -66,7 +66,7 @@ export default class ChipsMeshPool {
         material.emissiveColor = Color3.Black();
         material.emissiveTexture = texture;
         material.bumpTexture = bumpTexture;
-        material.wireframe = true;
+        // material.wireframe = true;
 
         return material;
     }

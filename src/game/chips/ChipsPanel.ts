@@ -52,6 +52,7 @@ export class ChipsPanel extends View3D {
     private chipsNode: TransformNode = new TransformNode("chips-container", this.uiScene);
     private plane: Mesh;
     private chipMeshes: AbstractMesh[] = [];
+    private startPointerID: number;
 
     init(...params: any): this {
         const availableChips = this.stakeModel.getAvailableChips();
@@ -63,10 +64,11 @@ export class ChipsPanel extends View3D {
         this.flowManager = di.get(CoreTypes.gameFlowManager);
         this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.uiScene);
         this.plane.rotate(Axis.X, Math.PI / 2);
-        this.plane.scaling.x = availableChips.length * 2;
+        this.plane.scaling.x = availableChips.length+1;
+        this.plane.scaling.z = 1.2
         this.plane.position.z = -Metrics.CHIP_DIAMETER * 0.5;
         this.plane.parent = this;
-        this.plane.isVisible = false;
+        // this.plane.isVisible = false;
 
         this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
         let easingFunction = new BABYLON.SineEase();
@@ -83,6 +85,7 @@ export class ChipsPanel extends View3D {
             let iChipView = this.chipFactory.get(amount);
             iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
+            iChipView.mesh.position.y = Metrics.CHIP_DEPTH;
             iChipView.mesh.parent = this.chipsNode;
             iChipView.mesh.isPickable = false;
             // @ts-ignore FIXME: temporary solution to bind data, again...
@@ -99,6 +102,7 @@ export class ChipsPanel extends View3D {
         this.flowManager.bet(0, mesh["chipValue"])
     }
     public startDrag(event: PointerEvent) {
+        this.startPointerID = event.pointerId
         this.startPoint = new Vector2(event.clientX, event.clientY);
         log_debug("startDrag")
     }
@@ -127,7 +131,7 @@ export class ChipsPanel extends View3D {
                             var pointerDragBehavior = new BABYLON.PointerDragBehavior({dragAxis: Axis.X});
                             pointerDragBehavior.updateDragPlane = false;
                             this.chipsNode.addBehavior(pointerDragBehavior);
-                            pointerDragBehavior.startDrag(undefined, undefined, this.chipsNode.absolutePosition);
+                            pointerDragBehavior.startDrag(this.startPointerID, undefined, this.chipsNode.absolutePosition);
                         }
                     }
                     break;
@@ -150,7 +154,7 @@ export class ChipsPanel extends View3D {
         this.snappedChipInstance.parent = this.chipsNode;
 
         this.snappedChipInstance.addBehavior(pointerDragBehavior);
-        pointerDragBehavior.startDrag();
+        pointerDragBehavior.startDrag(this.startPointerID);
         this.snappedChip.animations = [this.appearanceAnimation];
         this.uiScene.beginAnimation(this.snappedChip, 0, 30);
 

@@ -26,7 +26,7 @@ export class Card3D extends View3D {
         faceMaterial.diffuseTexture = faceTexture;
         faceMaterial.opacityTexture = faceTexture;
         faceMaterial.specularColor = Color3.Black();
-        faceMaterial.wireframe = true;
+        // faceMaterial.wireframe = true;
         plane.material = faceMaterial;
         return this
     }
@@ -55,7 +55,7 @@ export class Card3D extends View3D {
         const billetMaterial = new StandardMaterial("card_billet", this.scene);
         billetMaterial.diffuseTexture = dynamicTexture;
         billetMaterial.specularColor = Color3.Black();
-        billetMaterial.wireframe = true;
+        // billetMaterial.wireframe = true;
         extrusion.material = billetMaterial;
         extrusion.convertToFlatShadedMesh();
 
