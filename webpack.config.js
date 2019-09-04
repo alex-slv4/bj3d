@@ -109,7 +109,6 @@ const config = {
         contentBase: './dist',
         stats: 'errors-only',
         publicPath: '/',
-        open: 'Google Chrome',
         historyApiFallback: true,
         https: !gameOnlyMode
     }

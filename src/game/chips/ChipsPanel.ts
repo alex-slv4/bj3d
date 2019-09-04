@@ -116,7 +116,7 @@ export class ChipsPanel extends View3D {
                     debugger
                     let dragPoint = new Vector2(event.clientX, event.clientY);
                     let distance = Vector2.Distance(dragPoint, this.startPoint);
-                    if (distance > 20) {
+                    if (distance > 10) {
                         const vec = this.startPoint.subtract(dragPoint);
                         const angle = Math.atan2(vec.y, vec.x);
 
