@@ -111,6 +111,9 @@ export class ChipsPanel extends View3D {
 
             switch (this.dragState) {
                 case DragState.NONE:
+                    var scene1 = this.scene;
+                    var scene2 = this.uiScene;
+                    debugger
                     let dragPoint = new Vector2(event.clientX, event.clientY);
                     let distance = Vector2.Distance(dragPoint, this.startPoint);
                     if (distance > 20) {
@@ -145,6 +148,8 @@ export class ChipsPanel extends View3D {
         this.snappedChip = mesh;
         // TODO: move to constructor
         var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
+
+        // BABYLON.Vector3.TransformCoordinates(aChip.absolutePosition, mainScene.getTransformMatrix())
 
         // @ts-ignore
         let amount = mesh["chipValue"];
