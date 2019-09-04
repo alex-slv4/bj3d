@@ -76,6 +76,18 @@ export class ChipsPanel extends View3D {
         this.plane.parent = this;
         // this.plane.isVisible = false;
         this.dragPanelBehaviour.updateDragPlane = false;
+        this.dragPanelBehaviour.useObjectOrienationForDragging = false;
+        let stp = (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
+        let minX = -(availableChips.length - 1) * stp;
+        this.dragPanelBehaviour.onDragEndObservable.add(() => {
+            if (this.chipsNode.position.x > 0) {
+                this.chipsNode.position.x = 0
+            } else if (this.chipsNode.position.x < minX) {
+                this.chipsNode.position.x = minX
+            } else {
+                this.chipsNode.position.x = Math.round(this.chipsNode.position.x / stp) * stp;
+            }
+        });
         this.chipsNode.addBehavior(this.dragPanelBehaviour);
 
         this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);

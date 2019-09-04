@@ -51,7 +51,7 @@ export class ChipFactory {
         switch (colorCode) {
             case ChipColor.BLUE: return "#00143f";
             case ChipColor.RED: return "#ff0000";
-            case ChipColor.GREEN: return "#00ff00";
+            case ChipColor.GREEN: return "#42b336";
             case ChipColor.LIGHT_BLUE: return "#20beff";
             case ChipColor.PURPLE: return "#ff00ff";
             case ChipColor.ORANGE: return "#ff9900";
