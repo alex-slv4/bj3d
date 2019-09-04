@@ -20,16 +20,15 @@ export abstract class InteractionManager {
 
     init() {
         this.uiScene.onPointerObservable.add((p) => {
-            let pointerEvent = p.event as PointerEvent;
             switch (p.type) {
                 case PointerEventTypes.POINTERDOWN:
-                    this.chipsPanel.startDrag(pointerEvent);
+                    this.chipsPanel.startDrag(p);
                     break;
                 case PointerEventTypes.POINTERUP:
-                    this.chipsPanel.stopDrag(pointerEvent);
+                    this.chipsPanel.stopDrag(p);
                     break;
                 case PointerEventTypes.POINTERMOVE:
-                    this.chipsPanel.updateDrag(pointerEvent);
+                    this.chipsPanel.updateDrag(p);
                     break;
                 case PointerEventTypes.POINTERPICK:
                     this.pointerPick(p.pickInfo!);
