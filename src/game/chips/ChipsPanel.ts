@@ -8,20 +8,20 @@ import {GameFlowManagerBJ} from "../../managers/GameFlowManagerBJ";
 import {di} from "../../inversify.config";
 import {
     AbstractMesh,
+    Animation,
     Axis,
     Color3,
     EasingFunction,
     InstancedMesh,
     Mesh,
     MeshBuilder,
+    Nullable,
     PointerDragBehavior,
-    Scene,
+    PointerInfo,
     SineEase,
-    Space,
     StandardMaterial,
     TransformNode,
-    Animation,
-    Vector2, PointerInfo, Nullable
+    Vector2
 } from "@babylonjs/core";
 
 enum DragState {
@@ -32,9 +32,6 @@ enum DragState {
 
 @injectable()
 export class ChipsPanel extends View3D {
-
-    @inject(CoreTypes.uiScene)
-    private uiScene: Scene;
 
     @inject(StakeModel)
     private stakeModel: StakeModel;
@@ -50,7 +47,7 @@ export class ChipsPanel extends View3D {
     private dragState: DragState = DragState.NONE;
     private snappedChip: Mesh;
     private snappedChipInstance: InstancedMesh;
-    private chipsNode: TransformNode = new TransformNode("chips-container", this.uiScene);
+    private chipsNode: TransformNode = new TransformNode("chips-container", this.scene);
     private plane: Mesh;
     private chipMeshes: AbstractMesh[] = [];
     private startPointerID: number;
@@ -65,8 +62,8 @@ export class ChipsPanel extends View3D {
         this.chipsNode.position.y = Metrics.CHIP_DEPTH;
 
         this.flowManager = di.get(CoreTypes.gameFlowManager);
-        this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.uiScene);
-        const planeMat = new StandardMaterial("chip-panel", this.uiScene);
+        this.plane = MeshBuilder.CreatePlane("chip-panel-plane", {size: Metrics.CHIP_DIAMETER}, this.scene);
+        const planeMat = new StandardMaterial("chip-panel", this.scene);
         planeMat.diffuseColor = Color3.Black();
         planeMat.alpha = 0.4;
         this.plane.material = planeMat;
@@ -105,7 +102,7 @@ export class ChipsPanel extends View3D {
 
         availableChips.forEach((amount, i) => {
             let iChipView = this.chipFactory.get(amount);
-            iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
+            // iChipView.mesh.rotate(Axis.X, Math.PI / 8, Space.LOCAL);
             iChipView.mesh.position.x = i * (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH);
             iChipView.mesh.position.y = Metrics.CHIP_DEPTH;
             iChipView.mesh.parent = this.chipsNode;
@@ -169,20 +166,22 @@ export class ChipsPanel extends View3D {
         let amount = mesh["chipValue"];
         this.snappedChipInstance = this.chipFactory.get(amount).mesh as InstancedMesh;
         this.snappedChipInstance.position = mesh.position.clone();
-        this.snappedChipInstance.rotationQuaternion = mesh.rotationQuaternion!.clone();
+        if (mesh.rotationQuaternion) {
+            this.snappedChipInstance.rotationQuaternion = mesh.rotationQuaternion.clone();
+        }
         this.snappedChipInstance.parent = this.chipsNode;
 
         this.snappedChipInstance.addBehavior(pointerDragBehavior);
         pointerDragBehavior.startDrag(this.startPointerID);
         this.snappedChip.animations = [this.appearanceAnimation];
-        this.uiScene.beginAnimation(this.snappedChip, 0, 30);
+        this.scene.beginAnimation(this.snappedChip, 0, 30);
     }
 
     public stopDrag(p: PointerInfo) {
         this.dragState = DragState.NONE;
 
         if (this.snappedChip) {
-            this.uiScene.stopAnimation(this.snappedChip);
+            this.scene.stopAnimation(this.snappedChip);
             this.snappedChip.position.z = 0;
         }
         if (this.snappedChipInstance) {
@@ -194,7 +193,7 @@ export class ChipsPanel extends View3D {
         delete this.snappedChip;
     }
     public getChipAt(screenX: number, screenY: number): Nullable<Mesh> {
-        let pickInfo = this.uiScene.pick(screenX, screenY, mesh => mesh === this.plane)!;
+        let pickInfo = this.scene.pick(screenX, screenY, mesh => mesh === this.plane)!;
         if (pickInfo.pickedPoint) {
             let pickedX = pickInfo.pickedPoint.x - this.chipsNode.position.x;
             let chipIndex = Math.round(pickedX / (Metrics.CHIP_DIAMETER + Metrics.CHIP_DEPTH));

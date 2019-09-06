@@ -6,7 +6,7 @@ import {Color3, InstancedMesh, Mesh, MeshBuilder, Scene, StandardMaterial, Textu
 @injectable()
 export default class ChipsMeshPool {
 
-    @inject(CoreTypes.uiScene)
+    @inject(CoreTypes.mainScene)
     private scene: Scene;
 
     private cachedTemplates: { [key: string]: Mesh } = {};
@@ -41,7 +41,7 @@ export default class ChipsMeshPool {
         const mesh = MeshBuilder.CreateCylinder("chip", {
             diameter: Metrics.CHIP_DIAMETER,
             height: Metrics.CHIP_DEPTH,
-            tessellation: 24,
+            // tessellation: 24,
             faceUV,
         }, this.scene);
 

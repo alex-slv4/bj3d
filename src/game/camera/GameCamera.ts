@@ -32,8 +32,8 @@ export default class GameCamera {
         // this.camera.attachControl(canvas, true);
         // this.camera.rotation.x += 0.51;
 
-        this.camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 5, Metrics.CARD_HEIGHT * 4, Vector3.Zero(), this.scene);
-        // this.camera.attachControl(canvas, true);
+        this.camera = new ArcRotateCamera("camera", -Math.PI / 2, 0, Metrics.CARD_HEIGHT * 10, new Vector3(0, 0, Metrics.CARD_HEIGHT), this.scene);
+        this.camera.attachControl(canvas, true);
 
         (window as any).v_camera = this.camera;
     }

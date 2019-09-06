@@ -7,16 +7,14 @@ import {Mesh, PickingInfo, PointerEventTypes, Scene} from "@babylonjs/core";
 export abstract class InteractionManager {
 
     @inject(CoreTypes.mainScene)
-    protected mainScene: Scene;
-
-    @inject(CoreTypes.uiScene)
-    protected uiScene: Scene;
+    protected scene: Scene;
 
     @inject(ChipsPanel)
     protected chipsPanel: ChipsPanel;
 
     init() {
-        this.uiScene.onPointerObservable.add((p) => {
+        return;
+        this.scene.onPointerObservable.add((p) => {
             switch (p.type) {
                 case PointerEventTypes.POINTERDOWN:
                     this.chipsPanel.startDrag(p);

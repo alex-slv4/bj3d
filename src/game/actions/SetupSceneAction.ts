@@ -12,9 +12,6 @@ export class SetupSceneAction extends Action {
     @inject(GameCamera)
     private camera: GameCamera;
 
-    @inject(CoreTypes.uiScene)
-    private uiScene: Scene;
-
     @inject(CoreTypes.mainScene)
     private scene: Scene;
 
@@ -29,12 +26,7 @@ export class SetupSceneAction extends Action {
         light2.intensity = 1;
         light2.specular = Color3.White();
 
-        this.uiScene.addLight(light);
-        this.uiScene.addLight(light2);
-
         di.get(InteractionManager).init();
-        // di.get(SceneInteractionManager).init();
-        // di.get(UISceneInteractionManager).init();
 
         this.resolve();
     }
