@@ -3,14 +3,7 @@ import {log_debug, log_level_set} from "./core/log";
 import {CoreTypes} from "./CoreTypes";
 import GameCamera from "@game/camera/GameCamera";
 import {GameFlowManager} from "./managers/GameFlowManager";
-import Scene = BABYLON.Scene;
-import Engine = BABYLON.Engine;
-import Color4 = BABYLON.Color4;
-import Camera = BABYLON.Camera;
-import Vector3 = BABYLON.Vector3;
-import MeshBuilder = BABYLON.MeshBuilder;
-import Color3 = BABYLON.Color3;
-import UniversalCamera = BABYLON.UniversalCamera;
+import {Color4, Engine, Scene, UniversalCamera, Vector3} from "@babylonjs/core";
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 canvas.setAttribute("touch-action", "none"); // for pepjs support

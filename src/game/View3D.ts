@@ -1,7 +1,6 @@
 import {inject, injectable} from "inversify";
 import {CoreTypes} from "../CoreTypes";
-import Scene = BABYLON.Scene;
-import TransformNode = BABYLON.TransformNode;
+import {Scene, TransformNode} from "@babylonjs/core";
 
 @injectable()
 export abstract class View3D extends TransformNode {

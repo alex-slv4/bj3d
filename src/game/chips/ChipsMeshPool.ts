@@ -1,14 +1,7 @@
 import {inject, injectable} from "inversify";
 import {Metrics} from "@game/Metrics";
-import Color3 = BABYLON.Color3;
-import Texture = BABYLON.Texture;
-import StandardMaterial = BABYLON.StandardMaterial;
-import MeshBuilder = BABYLON.MeshBuilder;
-import Vector4 = BABYLON.Vector4;
-import Mesh = BABYLON.Mesh;
-import Scene = BABYLON.Scene;
-import InstancedMesh = BABYLON.InstancedMesh;
 import {CoreTypes} from "../../CoreTypes";
+import {Color3, InstancedMesh, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector4} from "@babylonjs/core";
 
 @injectable()
 export default class ChipsMeshPool {

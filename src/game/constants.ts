@@ -1,8 +1,7 @@
 /**
  * @author alexander.slavschik
  */
-
-import Vector2 = BABYLON.Vector2;
+import {Vector2} from "@babylonjs/core";
 
 export const BlackJackConstants = {
     I18N: {

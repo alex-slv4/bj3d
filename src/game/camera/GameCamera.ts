@@ -1,15 +1,16 @@
-import FreeCamera = BABYLON.FreeCamera;
-import ArcFollowCamera = BABYLON.ArcFollowCamera;
-import AbstractMesh = BABYLON.AbstractMesh;
-import Nullable = BABYLON.Nullable;
-import FollowCamera = BABYLON.FollowCamera;
-import Scene = BABYLON.Scene;
-import Vector3 = BABYLON.Vector3;
-import Engine = BABYLON.Engine;
-import ArcRotateCamera = BABYLON.ArcRotateCamera;
 import {inject, injectable} from "inversify";
 import {Metrics} from "../Metrics";
 import {CoreTypes} from "../../CoreTypes";
+import {
+    AbstractMesh,
+    ArcFollowCamera,
+    ArcRotateCamera,
+    Engine,
+    FollowCamera,
+    FreeCamera,
+    Nullable,
+    Scene, Vector3
+} from "@babylonjs/core";
 
 @injectable()
 export default class GameCamera {

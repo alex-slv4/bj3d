@@ -19,10 +19,10 @@
     "deploy:prod": "bash ./fb-deploy.sh prod"
   },
   "dependencies": {
+    "@babylonjs/core": "^4.0.3",
+    "@types/earcut": "^2.1.0",
     "@types/fpsmeter": "^0.3.29",
     "@types/inversify": "^2.0.33",
-    "babylonjs": "^4.0.3",
-    "babylonjs-inspector": "^3.3.0",
     "clean-webpack-plugin": "^1.0.1",
     "copy-webpack-plugin": "^5.0.0",
     "earcut": "^2.1.5",

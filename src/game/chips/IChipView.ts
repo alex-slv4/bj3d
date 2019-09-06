@@ -1,4 +1,4 @@
-import AbstractMesh = BABYLON.AbstractMesh;
+import {AbstractMesh} from "@babylonjs/core";
 
 export interface IChipView {
     amount: number,

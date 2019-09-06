@@ -6,10 +6,7 @@ import {inject} from "inversify";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {ChipsManager} from "@game/chips/ChipsManager";
 import {StakeModel} from "@game/StakeModel";
-import MeshBuilder = BABYLON.MeshBuilder;
-import StandardMaterial = BABYLON.StandardMaterial;
-import Color3 = BABYLON.Color3;
-import Axis = BABYLON.Axis;
+import {Axis, Color3, MeshBuilder, StandardMaterial} from "@babylonjs/core";
 
 export class Table3D extends View3D {
 

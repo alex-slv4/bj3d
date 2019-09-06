@@ -2,13 +2,9 @@ import {Action} from "@core/actions/Action";
 import {inject, injectable} from "inversify";
 import GameCamera from "@game/camera/GameCamera";
 import {CoreTypes} from "../../CoreTypes";
-import Scene = BABYLON.Scene;
-import Vector3 = BABYLON.Vector3;
-import Color3 = BABYLON.Color3;
-import {UISceneInteractionManager} from "../../managers/UISceneInteractionManager";
 import {di} from "../../inversify.config";
-import {SceneInteractionManager} from "../../managers/SceneInteractionManager";
 import {InteractionManager} from "../../managers/InteractionManager";
+import {Color3, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
 
 @injectable()
 export class SetupSceneAction extends Action {
@@ -25,11 +21,11 @@ export class SetupSceneAction extends Action {
     async execute(): Promise<any> {
         this.camera.create();
 
-        const light = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, 20, -5), this.scene);
+        const light = new HemisphericLight("HemisphericLight", new Vector3(-5, 20, -5), this.scene);
         light.intensity = 1;
         light.specular = Color3.White();
 
-        const light2 = new BABYLON.HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
+        const light2 = new HemisphericLight("HemisphericLight", new Vector3(-5, -20, -5), this.scene);
         light2.intensity = 1;
         light2.specular = Color3.White();
 

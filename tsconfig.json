@@ -35,7 +35,7 @@
         "outDir": "dist/",
         "sourceMap": true,
         "allowJs": true,
-        "types": ["babylonjs", "reflect-metadata"],
+        "types": ["reflect-metadata"],
 
         "typeRoots": ["node_modules/@types", "src/typings"]
 

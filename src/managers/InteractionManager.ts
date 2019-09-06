@@ -1,10 +1,7 @@
 import {inject, injectable} from "inversify";
-import Scene = BABYLON.Scene;
-import PickingInfo = BABYLON.PickingInfo;
-import PointerEventTypes = BABYLON.PointerEventTypes;
-import Mesh = BABYLON.Mesh;
 import {CoreTypes} from "../CoreTypes";
 import {ChipsPanel} from "@game/chips/ChipsPanel";
+import {Mesh, PickingInfo, PointerEventTypes, Scene} from "@babylonjs/core";
 
 @injectable()
 export abstract class InteractionManager {

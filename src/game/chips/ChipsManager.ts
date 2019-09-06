@@ -6,8 +6,7 @@ import {inject, injectable} from "inversify";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {ChipStackConstants} from "@game/chips/constants";
 import {di} from "../../inversify.config";
-import Scene = BABYLON.Scene;
-import PowerEase = BABYLON.PowerEase;
+import {Animation, PowerEase, Scene} from "@babylonjs/core";
 
 @injectable()
 export abstract class ChipsManager {
@@ -103,7 +102,7 @@ export abstract class ChipsManager {
         const framesPerItem = totalFrames * (ChipStackConstants.recast.FALL / values.length);
 
         const easingFunc = new PowerEase();
-        easingFunc.setEasingMode(BABYLON.PowerEase.EASINGMODE_EASEIN);
+        easingFunc.setEasingMode(PowerEase.EASINGMODE_EASEIN);
 
         values.forEach(async (amount: number, i: number) => {
             const rIndex = values.length - i;
@@ -111,7 +110,7 @@ export abstract class ChipsManager {
             const flyFromY: number = origStackTop - itemShiftDown;
             const chip = stack.push(amount);
 
-            const anim = new BABYLON.Animation(`shuffle-item-${i}`, "position.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
+            const anim = new Animation(`shuffle-item-${i}`, "position.y", 60, Animation.ANIMATIONTYPE_FLOAT);
 
             const firstFrame = {
                 frame: framesPerItem * (i + 1),

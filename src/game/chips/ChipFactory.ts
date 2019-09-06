@@ -7,7 +7,7 @@ import {IChipView} from "@game/chips/IChipView";
 import {inject, injectable} from "inversify";
 import {StakeModel} from "@game/StakeModel";
 import ChipsMeshPool from "@game/chips/ChipsMeshPool";
-import Color3 = BABYLON.Color3;
+import {Color3} from "@babylonjs/core";
 
 export const enum ChipColor {
     BLUE,

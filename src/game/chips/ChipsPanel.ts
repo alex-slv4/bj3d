@@ -6,21 +6,23 @@ import {CoreTypes} from "../../CoreTypes";
 import {Metrics} from "@game/Metrics";
 import {GameFlowManagerBJ} from "../../managers/GameFlowManagerBJ";
 import {di} from "../../inversify.config";
-import {log_warn} from "@core/log";
-import Scene = BABYLON.Scene;
-import Axis = BABYLON.Axis;
-import Space = BABYLON.Space;
-import Mesh = BABYLON.Mesh;
-import Vector2 = BABYLON.Vector2;
-import InstancedMesh = BABYLON.InstancedMesh;
-import EasingFunction = BABYLON.EasingFunction;
-import MeshBuilder = BABYLON.MeshBuilder;
-import TransformNode = BABYLON.TransformNode;
-import AbstractMesh = BABYLON.AbstractMesh;
-import Nullable = BABYLON.Nullable;
-import StandardMaterial = BABYLON.StandardMaterial;
-import Color3 = BABYLON.Color3;
-import PointerInfo = BABYLON.PointerInfo;
+import {
+    AbstractMesh,
+    Axis,
+    Color3,
+    EasingFunction,
+    InstancedMesh,
+    Mesh,
+    MeshBuilder,
+    PointerDragBehavior,
+    Scene,
+    SineEase,
+    Space,
+    StandardMaterial,
+    TransformNode,
+    Animation,
+    Vector2, PointerInfo, Nullable
+} from "@babylonjs/core";
 
 enum DragState {
     NONE,
@@ -43,7 +45,7 @@ export class ChipsPanel extends View3D {
     // @inject(CoreTypes.gameFlowManager) FIXME: why?
     private flowManager: GameFlowManagerBJ;
 
-    private appearanceAnimation: BABYLON.Animation;
+    private appearanceAnimation: Animation;
     private startPoint: Vector2;
     private dragState: DragState = DragState.NONE;
     private snappedChip: Mesh;
@@ -53,7 +55,7 @@ export class ChipsPanel extends View3D {
     private chipMeshes: AbstractMesh[] = [];
     private startPointerID: number;
 
-    private dragPanelBehaviour: BABYLON.PointerDragBehavior = new BABYLON.PointerDragBehavior({dragAxis: Axis.X});
+    private dragPanelBehaviour: PointerDragBehavior = new PointerDragBehavior({dragAxis: Axis.X});
 
     init(...params: any): this {
         const availableChips = this.stakeModel.getAvailableChips();
@@ -90,8 +92,8 @@ export class ChipsPanel extends View3D {
         });
         this.chipsNode.addBehavior(this.dragPanelBehaviour);
 
-        this.appearanceAnimation = new BABYLON.Animation("chip-appearance", "position.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
-        let easingFunction = new BABYLON.SineEase();
+        this.appearanceAnimation = new Animation("chip-appearance", "position.z", 60, Animation.ANIMATIONTYPE_FLOAT);
+        let easingFunction = new SineEase();
         easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEOUT);
         this.appearanceAnimation.setEasingFunction(easingFunction);
 
@@ -159,7 +161,7 @@ export class ChipsPanel extends View3D {
     private _snap(mesh: Mesh) {
         this.snappedChip = mesh;
         // TODO: move to constructor
-        var pointerDragBehavior = new BABYLON.PointerDragBehavior({});
+        var pointerDragBehavior = new PointerDragBehavior({});
 
         // BABYLON.Vector3.TransformCoordinates(aChip.absolutePosition, mainScene.getTransformMatrix())
 

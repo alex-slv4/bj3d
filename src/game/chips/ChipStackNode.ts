@@ -1,10 +1,6 @@
 /**
  * @author alexander.slavschik
  */
-import TransformNode = BABYLON.TransformNode;
-import Vector3 = BABYLON.Vector3;
-import Axis = BABYLON.Axis;
-import Space = BABYLON.Space;
 import {ChipStackConstants} from "@game/chips/constants";
 import {IChipView} from "@game/chips/IChipView";
 import {inject, injectable} from "inversify";
@@ -14,6 +10,7 @@ import {di} from "../../inversify.config";
 import {View3D} from "@game/View3D";
 import {DefaultChipStackSoundConfig, IChipStackSoundConfig} from "@game/sounds/constants";
 import {Metrics} from "@game/Metrics";
+import {Axis, Space, TransformNode, Vector3} from "@babylonjs/core";
 
 function getShiftXZ(): number {
     const randDither = Math.random() * ChipStackConstants.ditherXZ * 2;

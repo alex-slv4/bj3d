@@ -1,6 +1,5 @@
 import {inject, injectable} from "inversify";
-import DynamicTexture = BABYLON.DynamicTexture;
-import Scene = BABYLON.Scene;
+import {DynamicTexture, Scene} from "@babylonjs/core";
 
 
 const CARD_WIDTH: number = 100;

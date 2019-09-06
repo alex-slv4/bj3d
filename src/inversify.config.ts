@@ -1,7 +1,5 @@
-import {Container, decorate, injectable} from "inversify";
 import "reflect-metadata";
-import "babylonjs";
-import "babylonjs-inspector";
+import {Container, decorate, injectable} from "inversify";
 import ChipsMeshPool from "@game/chips/ChipsMeshPool";
 import {ChipFactory} from "@game/chips/ChipFactory";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
@@ -20,8 +18,6 @@ import {GameFlowManagerBJ} from "./managers/GameFlowManagerBJ";
 import {UILayer} from "./ui/UILayer";
 import {SetupUIAction} from "@game/actions/SetupUIAction";
 import {ChipsPanel} from "@game/chips/ChipsPanel";
-import {UISceneInteractionManager} from "./managers/UISceneInteractionManager";
-import {SceneInteractionManager} from "./managers/SceneInteractionManager";
 import {UpdateUIAction} from "@game/actions/UpdateUIAction";
 import {BetUtilBJ} from "@game/utils/BetUtilBJ";
 import {GameModel} from "@game/model/GameModelBJ";
@@ -31,11 +27,12 @@ import {DealerModel} from "@game/model/DealerModel";
 import {PlaceBetAction} from "@game/actions/PlaceBetAction";
 import {DealAction} from "@game/actions/DealAction";
 import {InteractionManager} from "./managers/InteractionManager";
+import {TransformNode} from "@babylonjs/core";
 
 export const di = new Container();
 
 decorate(injectable(), EventEmitter);
-decorate(injectable(), BABYLON.TransformNode);
+decorate(injectable(), TransformNode);
 
 di.bind(ChipsMeshPool).toSelf();
 di.bind(ChipFactory).toSelf();
@@ -73,8 +70,6 @@ di.bind(ChipsPanel).toSelf().inSingletonScope();
 
 
 di.bind(InteractionManager).toSelf().inSingletonScope();
-di.bind(UISceneInteractionManager).toSelf().inSingletonScope();
-di.bind(SceneInteractionManager).toSelf().inSingletonScope();
 
 di.bind(CoreTypes.debug.fpsMeter).toDynamicValue(() => {
     return new FPSMeter(document.getElementById("fps-meter") as HTMLElement, {
