@@ -5,5 +5,6 @@ export const CoreTypes = {
     },
     mainScene: Symbol("mainScene"),
     card: Symbol("Card3D"),
+    coreGame: Symbol("coreGame"),
     gameFlowManager: Symbol("gameFlowManager")
 };

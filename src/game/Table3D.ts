@@ -1,13 +1,12 @@
 import {View3D} from "@game/View3D";
-import {Card3D} from "@game/cards/Card3D";
-import {di} from "../inversify.config";
 import {Metrics} from "@game/Metrics";
 import {inject} from "inversify";
 import {ChipStackNode} from "@game/chips/ChipStackNode";
 import {ChipsManager} from "@game/chips/ChipsManager";
 import {StakeModel} from "@game/StakeModel";
 import {Axis, Color3, Mesh, MeshBuilder, StandardMaterial, TransformNode} from "@babylonjs/core";
-import {ChipFactory} from "@game/chips/ChipFactory";
+import {Deck} from "@game/model/blackjackcore/Deck";
+import {HandNode} from "@game/HandNode";
 
 export class Table3D extends View3D {
 
@@ -19,6 +18,14 @@ export class Table3D extends View3D {
 
     @inject(StakeModel)
     private stakeModel: StakeModel;
+
+    @inject(HandNode)
+    public dealerCardsNode: HandNode;
+
+    @inject(HandNode)
+    public handCardsNode: HandNode;
+
+    private deck: Deck = new Deck();
 
     private betSpot: Mesh;
 
@@ -44,32 +51,31 @@ export class Table3D extends View3D {
         mesh.material = clothMaterial;
         mesh.parent = this;
 
-        const dealerCardsNode = new TransformNode("dealer-cards", this.scene);
-        const userCardsNode = new TransformNode("user-cards", this.scene);
+        // let siz = (Metrics.CARD_WIDTH * 0.25);
+        // [0, 0, 0, 0, 0].forEach((_, i) => {
+        //     let cardNode: Card3D = di.get(Card3D);
+        //     cardNode.init(this.deck.pull());
+        //     cardNode.position.x = i * siz;
+        //     cardNode.position.y = i * Metrics.CARD_DEPTH;
+        //     cardNode.parent = this.dealerCardsNode;
+        // });
+        // this.dealerCardsNode.position.x = -(siz * 5) / 2;
 
-        let siz = (Metrics.CARD_WIDTH * 0.25);
-        [0, 0, 0, 0, 0].forEach((_, i) => {
-            let cardNode: Card3D = di.get(Card3D);
-            cardNode.init();
-            cardNode.position.x = i * siz;
-            cardNode.position.y = i * Metrics.CARD_DEPTH;
-            cardNode.parent = dealerCardsNode;
-        });
-        dealerCardsNode.position.x = -(siz * 5) / 2;
+        // [0, 0, 0].forEach((_, i) => {
+        //     let cardNode: Card3D = di.get(Card3D);
+        //     cardNode.init(this.deck.pull());
+        //     cardNode.parent = this.handCardsNode;
+        //     cardNode.position.x = i * (Metrics.CARD_WIDTH / 5);
+        //     cardNode.position.z = i * (Metrics.CARD_HEIGHT / 5);
+        //     cardNode.position.y = i * Metrics.CARD_DEPTH;
+        // });
 
-        [0, 0, 0].forEach((_, i) => {
-            let cardNode: Card3D = di.get(Card3D);
-            cardNode.init();
-            cardNode.parent = userCardsNode;
-            cardNode.position.x = i * (Metrics.CARD_WIDTH / 5);
-            cardNode.position.z = i * (Metrics.CARD_HEIGHT / 5);
-            cardNode.position.y = i * Metrics.CARD_DEPTH;
-        });
-        userCardsNode.position.z = betSpotSize;
-        userCardsNode.parent = this;
-        dealerCardsNode.parent = this;
-        dealerCardsNode.position.z = Metrics.CARD_HEIGHT * 2.5;
-        userCardsNode.position.y = dealerCardsNode.position.y = Metrics.CARD_DEPTH;
+        this.handCardsNode.position.z = betSpotSize;
+        this.handCardsNode.parent = this;
+        this.dealerCardsNode.parent = this;
+        this.dealerCardsNode.position.z = Metrics.CARD_HEIGHT * 2.5;
+        this.handCardsNode.position.y = this.dealerCardsNode.position.y = Metrics.CARD_DEPTH;
+
 
         // let cardNode: Card3D = di.get(Card3D);
         // let cardNode2: Card3D = di.get(Card3D);

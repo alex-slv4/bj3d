@@ -2,6 +2,8 @@ import {inject, injectable} from "inversify";
 import {CoreTypes} from "../CoreTypes";
 import {ChipsPanel} from "@game/chips/ChipsPanel";
 import {Mesh, PickingInfo, PointerEventTypes, Scene} from "@babylonjs/core";
+import {di} from "../inversify.config";
+import {GameFlowManagerBJ} from "./GameFlowManagerBJ";
 
 @injectable()
 export abstract class InteractionManager {
@@ -13,7 +15,6 @@ export abstract class InteractionManager {
     protected chipsPanel: ChipsPanel;
 
     init() {
-        return;
         this.scene.onPointerObservable.add((p) => {
             switch (p.type) {
                 case PointerEventTypes.POINTERDOWN:
@@ -40,12 +41,10 @@ export abstract class InteractionManager {
     }
 
     protected pointerPick(p: PickingInfo) {
-        // if (p.hit) {
-        //     const theMesh = p!.pickedMesh!;
-        //     if (this.scene == theMesh.getScene()) {
-        //         this.onMeshPick(theMesh as Mesh, p)
-        //     }
-        // }
+        if (p.hit) {
+            const theMesh = p!.pickedMesh!;
+            di.get<GameFlowManagerBJ>(CoreTypes.gameFlowManager).bet("0", 10)
+        }
     }
 
     protected onMeshPick(pick: Mesh, p: PickingInfo) {

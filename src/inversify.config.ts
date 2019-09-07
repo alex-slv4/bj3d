@@ -28,6 +28,8 @@ import {PlaceBetAction} from "@game/actions/PlaceBetAction";
 import {DealAction} from "@game/actions/DealAction";
 import {InteractionManager} from "./managers/InteractionManager";
 import {TransformNode} from "@babylonjs/core";
+import {BlackjackCore} from "@game/model/blackjackcore/BlackjackCore";
+import {HandNode} from "@game/HandNode";
 
 export const di = new Container();
 
@@ -38,6 +40,7 @@ di.bind(ChipsMeshPool).toSelf();
 di.bind(ChipFactory).toSelf();
 di.bind(ChipStackNode).toSelf();
 di.bind(Card3D).toSelf();
+di.bind(HandNode).toSelf();
 di.bind(Table3D).toSelf().inSingletonScope();
 
 di.bind(ChipsManager).toSelf().inSingletonScope();
@@ -59,6 +62,7 @@ di.bind(DealAction).toSelf(); //
 di.bind(PlaceBetAction).toSelf(); //
 di.bind(UpdateUIAction).toSelf(); //
 
+di.bind(CoreTypes.coreGame).to(BlackjackCore).inSingletonScope();
 
 
 di.bind(UILayer).toSelf().inSingletonScope();

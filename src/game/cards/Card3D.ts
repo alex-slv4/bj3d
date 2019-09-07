@@ -4,6 +4,7 @@ import {View3D} from "@game/View3D";
 import {Metrics} from "@game/Metrics";
 import {Axis, Color3, Mesh, MeshBuilder, StandardMaterial, Vector3, Vector4} from "@babylonjs/core";
 import * as MyEarcut from "earcut";
+import {ICard} from "@game/model/ICard";
 
 @injectable()
 export class Card3D extends View3D {
@@ -11,7 +12,7 @@ export class Card3D extends View3D {
     @inject(CardTextureCache)
     private cardsTextureCache: CardTextureCache;
 
-    init(...params: any[]): this {
+    init(card: ICard): this {
         const billetMesh = this.generateBilletMesh();
         const plane = MeshBuilder.CreatePlane("card-face", {width: Metrics.CARD_WIDTH, height: Metrics.CARD_HEIGHT}, this.scene);
         billetMesh.parent = this;
@@ -20,7 +21,7 @@ export class Card3D extends View3D {
         plane.position.y = 0.05;
 
         const faceMaterial = new StandardMaterial("card-face", this.scene);
-        let faceTexture = this.cardsTextureCache.getRandom();
+        let faceTexture = this.cardsTextureCache.getById(card.rank + card.suit);
         faceMaterial.diffuseTexture = faceTexture;
         faceMaterial.opacityTexture = faceTexture;
         faceMaterial.specularColor = Color3.Black();

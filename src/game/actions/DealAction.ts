@@ -8,9 +8,17 @@ import {HandsModel} from "@game/model/HandsModel";
 import {DealerModel} from "@game/model/DealerModel";
 import {BetModelBJ} from "@game/model/BetModelBJ";
 import {GameModel} from "@game/model/GameModelBJ";
+import {BlackjackCore} from "@game/model/blackjackcore/BlackjackCore";
+import {CoreTypes} from "../../CoreTypes";
+import {Table3D} from "@game/Table3D";
+import {di} from "../../inversify.config";
+import {Card3D} from "@game/cards/Card3D";
 
 @injectable()
 export class DealAction extends Action {
+
+    @inject(CoreTypes.coreGame)
+    private coreGame: BlackjackCore;
 
     @inject(HandsModel)
     protected handsModel: HandsModel;
@@ -18,6 +26,9 @@ export class DealAction extends Action {
     protected dealerHand: DealerModel;
     @inject(BetModelBJ)
     protected betModel: BetModelBJ;
+
+    @inject(Table3D)
+    private table: Table3D;
 
     // @inject(TableView)
     // private tableView: TableView;
@@ -34,6 +45,20 @@ export class DealAction extends Action {
         this.gameModel.startRound();
         this.amount = this.betModel.totalBet;
         this.updateValues(this.amount);
+
+
+        const DEAL_COUNT: number = 2;
+
+        for (let i: number = 0; i < DEAL_COUNT; i++) {
+            let cardModel = this.coreGame.deck.pull();
+            let theCard = di.get(Card3D).init(cardModel);
+            this.table.dealerCardsNode.addCard(theCard);
+
+            let cardModel2 = this.coreGame.deck.pull();
+            let theCard2 = di.get(Card3D).init(cardModel2);
+            this.table.handCardsNode.addCard(theCard2);
+        }
+
         this.resolve();
     }
 
